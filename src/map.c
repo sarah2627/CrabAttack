@@ -1,14 +1,14 @@
 #include "map.h"
 #define TAILLE_MAX 50
 
-Map loadMap(char *filename)
+Map loadMap(char *filename, Image *image)
 {
     FILE* fichierITD = fopen(filename, "r");
     printf("fichier name :%s\n", filename);
     if (fichierITD != NULL)
     {
          Map map;
-        if(readMap(fichierITD, &map)) {
+        if(readMap(fichierITD, &map, &image)) {
             return map;
         }
         fclose(fichierITD);
@@ -22,7 +22,7 @@ Map loadMap(char *filename)
    
 }
 
-int readMap(FILE * fichierITD, Map * map)
+int readMap(FILE * fichierITD, Map * map, Image *image)
 {
     // première ligne : @ITD 1
     char type[7] = "";
@@ -221,7 +221,7 @@ int readMap(FILE * fichierITD, Map * map)
         return 0;
     }
     // création d'un tableau à partir de l'image ppm
-    Image image;
+    
     if(loadImagePPM(&image, file) !=EXIT_SUCCESS)
     {
         return EXIT_FAILURE;

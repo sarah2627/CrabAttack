@@ -8,8 +8,8 @@
 int main()
 {
     Map map;
-    map = loadMap("./data/carte.itd");
-    printf("chat");
-
+    Image image; //l'image qu'on va parcourir
+    map = loadMap("./data/carte.itd", &image);
+    freeImage(&image);
     return 0;
 }

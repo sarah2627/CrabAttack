@@ -30,8 +30,8 @@
  } Map;
  
 
- Map loadMap(char *filename);
- int readMap(FILE * fichierITD, Map * map);
+ Map loadMap(char *filename, Image *image);
+ int readMap(FILE * fichierITD, Map * map, Image *image);
  Color newColor(float r, float g, float b);
  
 #endif
