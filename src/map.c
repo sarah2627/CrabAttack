@@ -63,7 +63,7 @@ int readMap(FILE * fichierITD, Map * map)
     char fichiercarte[15]="";
     fgets(fichiercarte, 15, fichierITD);
     printf("fichier :%s", fichiercarte);
-
+    char imagecarte[15]="";
     char* extension = strstr(fichiercarte, ".ppm");
     if(extension == NULL){
         printf("l'image n'est pas au bon format\n");
@@ -71,9 +71,16 @@ int readMap(FILE * fichierITD, Map * map)
     }
     else {
         //on enlève le "\n" du .ppm
-        int taille = strlen(fichiercarte);
-        fichiercarte[taille-1] = '\0';   
-        (*map).carte = fichiercarte;
+        int cpt =0;
+        while (fichiercarte[cpt] != '.')
+        {
+           cpt++;
+        }
+        cpt +=4;
+        
+        strncat(imagecarte, fichiercarte, cpt);
+        printf("result : %s",imagecarte);  
+        (*map).carte = imagecarte;
     }
 
     //quatrième ligne : couleur chemin
@@ -207,15 +214,15 @@ int readMap(FILE * fichierITD, Map * map)
 
     // Chargement de la carte
     char file[30] = "images/";
-    strcat(file, fichiercarte);
-    SDL_Surface* carteSurface = IMG_Load("images/image.ppm");
+    strcat(file, imagecarte);
+    SDL_Surface* carteSurface = IMG_Load(file);
     if(carteSurface == NULL) {
         fprintf(stderr, "impossible de charger la carte %s\n", file);
         return 0;
     }
     // création d'un tableau à partir de l'image ppm
     Image image;
-    if(loadImagePPM(&image, "images/image.ppm") !=EXIT_SUCCESS)
+    if(loadImagePPM(&image, file) !=EXIT_SUCCESS)
     {
         return EXIT_FAILURE;
     }
