@@ -8,7 +8,7 @@ Map loadMap(char *filename, Image *image)
     if (fichierITD != NULL)
     {
          Map map;
-        if(readMap(fichierITD, &map, &image)) {
+        if(readMap(fichierITD, &map, image)) {
             return map;
         }
         fclose(fichierITD);
@@ -222,7 +222,7 @@ int readMap(FILE * fichierITD, Map * map, Image *image)
     }
     // création d'un tableau à partir de l'image ppm
     
-    if(loadImagePPM(&image, file) !=EXIT_SUCCESS)
+    if(loadImagePPM(image, file) !=EXIT_SUCCESS)
     {
         return EXIT_FAILURE;
     }
@@ -313,9 +313,9 @@ int readMap(FILE * fichierITD, Map * map, Image *image)
                
                if(tmp < nbNode)
                {
-                   printf("ca va?\n");
-                   printf("%p", node);
-                 addSuccessors(tmp, node->successors);
+                    printf("ca va?\n");
+                    printf("%p", node);
+                    addSuccessors(tmp, node->successors);
                     printf("oui!\n");
                }
                else

@@ -14,33 +14,53 @@ Node* createNode(int x, int y, int type, int index) {
 	return node;
 }
 
-AdjacenceList findLast(AdjacenceList list)
+AdjacentNode *findLast(AdjacenceList list)
 {
     if(list)
     {
-        while (list !=NULL)
-         {
+        while (list->next != NULL)
+        {
             list = list->next;
-         }
-            return list;
+            printf("%p", list);
+        }
+        return list;
     }
     else
     {
-        exit(1);
+        exit(EXIT_FAILURE);
     }
 }
 
 void addSuccessors(int value, AdjacenceList list)
 {
     printf("hello\n");
-    AdjacentNode* new = malloc(sizeof(AdjacentNode));
+    AdjacentNode* new = (AdjacentNode *)malloc(sizeof(AdjacentNode));
     printf("cool");
-    if(!new)
-    {
+
+    if(!new) {
         exit(EXIT_FAILURE);
     }
+
     new->index = value;
-    new->next = 0;
-    findLast(list)->next = new;
+    new->next = NULL;
+
+    AdjacentNode *tmp = list;
+    printf("%p\n", tmp);
+    printf("%p\n", tmp->next);
+    tmp = tmp->next;
+    printf("%p\n", tmp);
+    printf("%p\n", tmp->next);
+tmp = tmp->next;
+    printf("%p\n", tmp);
+    printf("%p\n", tmp->next);
+    printf("%p\n", tmp->next->next);
+
+
+    /*if (tmp) {
+        while (tmp->next != NULL) {
+            tmp = tmp->next;
+        }
+        //list->next = new;
+    }*/
 
 }

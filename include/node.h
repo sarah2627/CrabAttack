@@ -25,7 +25,7 @@ typedef struct node
 
 
 Node* createNode(int x, int y, int type, int index);
-AdjacenceList findLast(AdjacenceList list);
+AdjacentNode *findLast(AdjacenceList list);
 void addSuccessors(int value, AdjacenceList list);
 
 #endif
