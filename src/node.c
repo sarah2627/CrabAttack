@@ -44,23 +44,21 @@ void addSuccessors(int value, AdjacenceList list)
     new->index = value;
     new->next = NULL;
 
-    AdjacentNode *tmp = list;
-    printf("%p\n", tmp);
-    printf("%p\n", tmp->next);
-    tmp = tmp->next;
-    printf("%p\n", tmp);
-    printf("%p\n", tmp->next);
-tmp = tmp->next;
-    printf("%p\n", tmp);
-    printf("%p\n", tmp->next);
-    printf("%p\n", tmp->next->next);
-
-
-    /*if (tmp) {
-        while (tmp->next != NULL) {
-            tmp = tmp->next;
+    AdjacentNode *temp = malloc(sizeof(AdjacenceList));
+    temp = list;
+   
+   
+    if (temp) {
+        while (temp->next != NULL) {
+            printf("yo\n");
+            printf("%p\n", temp);
+            temp = temp->next;
+            printf("%p\n", temp);
+            printf("momo\n");
         }
-        //list->next = new;
-    }*/
+   
+        printf("alors?\n");
+        temp->next = new;
+    }
 
 }

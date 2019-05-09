@@ -227,6 +227,7 @@ int readMap(FILE * fichierITD, Map * map, Image *image)
         return EXIT_FAILURE;
     }
 
+   
     char *line = NULL;
     size_t len = 0;
 
@@ -296,25 +297,43 @@ int readMap(FILE * fichierITD, Map * map, Image *image)
                }else
                {
                     height = tmp;
-                    /*
-                    if(map->noeud.red == image.data[width*height] && map->noeud.green == image.data[width*height+1] && map->noeud.blue == image.data[width*height+2]) 
+                    
+                    if(map->noeud.red == image->data[width*height] && map->noeud.green == image->data[width*height+1] && map->noeud.blue == image->data[width*height+2]) 
                     {
                         node = createNode(width,height,type,index);
                     }
-                    */
-                    node = createNode(width,height,type,index);
-                    printf("\n%p", node);
+                    else
+                    {
+                        printf("width du pixel : %d\n", width);
+                        printf("height du pixel : %d\n", height);
+                        printf("rouge = %d\n", map->noeud.red);
+                        printf("vert = %d\n", map->noeud.green);
+                        printf("bleu = %d\n", map->noeud.blue);
+                        printf("pixel 1: %d\n", image->data[0]);
+                        printf("pixel 2: %d\n", image->data[1]);
+                        printf("pixel 3: %d\n", image->data[2]);
+                        fprintf(stderr, "Erreur: position des noeuds incorrects\n");
+                        return 0;
+                    }
+                    
+                    
+                   node = createNode(width,height,type,index);
                     printf("\nsfeqrgrg\n");
+                    printf("tmp alors 2 = %d", tmp);
                }
-               
+               printf("\nyahoo\n");
            }
+           printf("\nyahoo2\n");
            if(nbArgument > 3)
            {
+               printf("tmp alors = %d", tmp);
+               printf("\nyahoo3\n");
                
                if(tmp < nbNode)
                {
                     printf("ca va?\n");
                     printf("%p", node);
+                    printf("tmp = %d\n", tmp);
                     addSuccessors(tmp, node->successors);
                     printf("oui!\n");
                }

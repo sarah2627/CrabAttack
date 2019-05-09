@@ -1,7 +1,6 @@
 @ITD 1
 #premiere ligne de commentaire
-carte map.ppm
-energie 100
+carte map_day2.ppm
 chemin 255 255 255
 noeud 0 0 0
 construct 255 200 80
