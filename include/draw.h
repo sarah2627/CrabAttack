@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <math.h>
 
+ #define M_PI 3.14
 //chargement d'une image
 SDL_Surface* Image_Load(char* image_path);
 //chargement d'une texture
