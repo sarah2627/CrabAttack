@@ -1,4 +1,6 @@
 #include "node.h"
+#define MAX_TAILLE 20
+
 
 Node* createNode(int x, int y, int type, int index) {
 	Node* node = (Node*)malloc(sizeof(Node));
@@ -10,26 +12,12 @@ Node* createNode(int x, int y, int type, int index) {
     node->type = type;
 	node->x = x;
 	node->y = y;
-	node->successors = malloc(sizeof(AdjacenceList));
+	node->successors = (AdjacenceList)malloc(MAX_TAILLE*sizeof(AdjacentNode));
+    (*node).successors= NULL;
 	return node;
 }
 
-AdjacentNode *findLast(AdjacenceList list)
-{
-    if(list)
-    {
-        while (list->next != NULL)
-        {
-            list = list->next;
-            printf("%p", list);
-        }
-        return list;
-    }
-    else
-    {
-        exit(EXIT_FAILURE);
-    }
-}
+
 
 void addSuccessors(int value, AdjacenceList list)
 {
@@ -44,11 +32,15 @@ void addSuccessors(int value, AdjacenceList list)
     new->index = value;
     new->next = NULL;
 
-    AdjacentNode *temp = malloc(sizeof(AdjacenceList));
-    temp = list;
+    AdjacentNode *temp = list;
+    //temp = list;
    
    
-    if (temp) {
+    if (temp==NULL) 
+    { 
+        temp = new;
+    }
+    else{
         while (temp->next != NULL) {
             printf("yo\n");
             printf("%p\n", temp);

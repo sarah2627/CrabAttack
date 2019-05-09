@@ -231,22 +231,27 @@ int readMap(FILE * fichierITD, Map * map, Image *image)
    
     char *line = NULL;
     size_t len = 0;
-
+    printf("alors alors ?\n");
     Node *node = NULL;
 
     while((getline(&line, &len, fichierITD)) != -1) {
         
-       printf("%s", line);
+       //printf("%s", line);
+       char tmpstring[10];
        int tmp = 0;
        int nbArgument =0;
        int index =0;
        int type=0;
        int width=0;
        int height=0;
-
-       while(sscanf(line, "%d", &tmp) == 1)
+       //sscanf(line, "%d", tmp);
+       printf("sscanf= %d\n", sscanf(line, "%s", tmpstring));
+       printf("et bien voila le result = %d\n", tmp);
+       while(sscanf(line, "%s", tmpstring) == 1)
        {
-           printf("tmp = %d\n", tmp);
+           tmp = atoi(tmpstring);
+           int tailletmp = strlen(tmpstring);
+           printf("tmp = %d et taille %d\n", tmp, tailletmp);
            if(nbArgument == 0)
            {
                if(tmp<0 || tmp>nbNode)
@@ -320,36 +325,37 @@ int readMap(FILE * fichierITD, Map * map, Image *image)
                     */
                    node = createNode(width,height,type,index);
     
-                    printf("tmp alors 2 = %d", tmp);
+                    //printf("tmp alors = %d\n", tmp);
                }
               
            }
         
            if(nbArgument > 3)
            {
-               printf("tmp alors = %d", tmp);
+               //printf("tmp alors = %d", tmp);
                fprintf(stderr,"\nyahoo3\n");
                
                if(tmp < nbNode)
                {
                
-                    printf("%p", node);
-                    printf("tmp = %d\n", tmp);
+                    printf("ajout succ \n");
+                    //printf("tmp = %d\n", tmp);
                     addSuccessors(tmp, node->successors);
                  
                }
                else
                {
                    fprintf(stderr, "Erreur: index des successeurs incorrect\n");
-                   return 1;
+                   return 0;
                }
             }
             nbArgument ++;
-            line+=2;  
+            //printf("tmp : %d", tmp);
+            line = line + tailletmp +1;  
        }
     }
 
-
+    printf("\nvictoirrreeee \n");
     SDL_FreeSurface(carteSurface);
     return 1;
 
