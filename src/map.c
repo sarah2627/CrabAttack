@@ -304,10 +304,54 @@ int readMap(FILE * fichierITD, Map * map, Image *image)
                }else
                {
                     posy = tmp;
-                      printf("pixel 1: %d\n", image->data[0]);
-                        printf("pixel 2: %d\n", image->data[1]);
-                        printf("pixel 3: %d\n", image->data[2]);
+                        printf("pixel 1: %d\n", image->data[(posy*image->width*3+posx*3)]);
+                        printf("pixel 2: %d\n", image->data[(posy*image->width*3+posx*3)+1]);
+                        printf("pixel 3: %d\n", image->data[(posy*image->width*3+posx*3)+2]);
+                        printf("type = %d\n", type);
+                        
+
+                    if(type == 1)
+                    {
+                        if(map->in.red == image->data[(posy*image->width*3+posx*3)] && map->in.green == image->data[(posy*image->width*3+posx*3)+1] && map->in.blue == image->data[(posy*image->width*3+posx*3)+2]) 
+                        {
+                            node = createNode(posx,posy,type,index,map->listenode);
+                        }
+                        else
+                        {
+                            fprintf(stderr, "Erreur: position des noeuds incorrects\n");
+                            return 0;
+                        }
+                    }
+                    else if(type == 2)
+                    {
+                        if(map->out.red == image->data[(posy*image->width*3+posx*3)] && map->out.green == image->data[(posy*image->width*3+posx*3)+1] && map->out.blue == image->data[(posy*image->width*3+posx*3)+2]) 
+                        {
+                            node = createNode(posx,posy,type,index,map->listenode);
+                        }
+                        else
+                        {
+                            fprintf(stderr, "Erreur: position des noeuds incorrects\n");
+                            return 0;
+                        }
+                    }
+                    else if(type == 3 || type == 4)
+                    {
+                        if(map->noeud.red == image->data[(posy*image->width*3+posx*3)] && map->noeud.green == image->data[(posy*image->width*3+posx*3)+1] && map->noeud.blue == image->data[(posy*image->width*3+posx*3)+2]) 
+                        {
+                            node = createNode(posx,posy,type,index,map->listenode);
+                        }
+                        else
+                        {
+                            fprintf(stderr, "Erreur: position des noeuds incorrects\n");
+                            return 0;
+                        }
+                    }else
+                    {
+                        fprintf(stderr,"Error du type lors de la vérif des couleurs");
+                        return 0;
+                    }
                     
+                    /*
                     if(map->noeud.red == image->data[(posy*image->width*3+posx*3)] && map->noeud.green == image->data[(posy*image->width*3+posx*3)+1] && map->noeud.blue == image->data[(posy*image->width*3+posx*3)+2]) 
                     {
                         node = createNode(posx,posy,type,index,map->listenode);
@@ -328,7 +372,7 @@ int readMap(FILE * fichierITD, Map * map, Image *image)
                         fprintf(stderr, "Erreur: position des noeuds incorrects\n");
                         return 0;
                     }
-                    
+                    */
                     
                   // node = createNode(width,height,type,index,map->listenode);
     
