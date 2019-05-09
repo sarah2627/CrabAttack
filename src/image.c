@@ -48,7 +48,7 @@ int saveImagePPM(Image *image, char *filename)
   {
     // generate the header
     char header[100]; // bad way to proceed, but still ok ...
-    sprintf(header,"width = %d height = %d\n255\n",image->width,image->height);
+    sprintf(header,"P6\n\n%d %d\n255\n",image->width,image->height);
     fprintf(myfile,"%s",header);
 
     // write the data
@@ -92,7 +92,6 @@ int loadImagePPM(Image *image, char *filename)
   
   // read width and height
   sscanf(chaine,"%d %d",&width,&height);
-  printf("width:  %d\nheight: %d\n",width,height);
 
   // read the "255"
   fscanf(myFile,"%s\n",chaine);

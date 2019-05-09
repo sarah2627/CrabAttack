@@ -227,7 +227,7 @@ int readMap(FILE * fichierITD, Map * map, Image *image)
     {
         return EXIT_FAILURE;
     }
-
+    saveImagePPM(image,"output.ppm");
    
     char *line = NULL;
     size_t len = 0;
@@ -243,8 +243,8 @@ int readMap(FILE * fichierITD, Map * map, Image *image)
        int nbArgument =0;
        int index =0;
        int type=0;
-       int width=0;
-       int height=0;
+       int posx=0;
+       int posy=0;
        //sscanf(line, "%d", tmp);
        printf("sscanf= %d\n", sscanf(line, "%s", tmpstring));
        printf("et bien voila le result = %d\n", tmp);
@@ -290,7 +290,7 @@ int readMap(FILE * fichierITD, Map * map, Image *image)
                }
                else
                {
-                   width = tmp;
+                   posx = tmp;
                }
                
            }
@@ -303,28 +303,34 @@ int readMap(FILE * fichierITD, Map * map, Image *image)
                    return 0;
                }else
                {
-                    height = tmp;
-                    /*
-                    if(map->noeud.red == image->data[width*height] && map->noeud.green == image->data[width*height+1] && map->noeud.blue == image->data[width*height+2]) 
+                    posy = tmp;
+                      printf("pixel 1: %d\n", image->data[0]);
+                        printf("pixel 2: %d\n", image->data[1]);
+                        printf("pixel 3: %d\n", image->data[2]);
+                    
+                    if(map->noeud.red == image->data[(posy*image->width*3+posx*3)] && map->noeud.green == image->data[(posy*image->width*3+posx*3)+1] && map->noeud.blue == image->data[(posy*image->width*3+posx*3)+2]) 
                     {
-                        node = createNode(width,height,type,index);
+                        node = createNode(posx,posy,type,index,map->listenode);
                     }
                     else
                     {
-                        printf("width du pixel : %d\n", width);
-                        printf("height du pixel : %d\n", height);
+                        printf("posX du pixel : %d\n", posx);
+                        printf("posY du pixel : %d\n", posy);
+                        printf("width du pixel : %d\n", image->width);
                         printf("rouge = %d\n", map->noeud.red);
                         printf("vert = %d\n", map->noeud.green);
                         printf("bleu = %d\n", map->noeud.blue);
-                        printf("pixel 1: %d\n", image->data[0]);
-                        printf("pixel 2: %d\n", image->data[1]);
-                        printf("pixel 3: %d\n", image->data[2]);
+                        // (y*width+x)*3+0 +1 +2
+
+                        printf("pixel 1: %d\n", image->data[(posy*image->width*3+posx*3)]);
+                        printf("pixel 2: %d\n", image->data[(posy*image->width*3+posx*3)+1]);
+                        printf("pixel 3: %d\n", image->data[(posy*image->width*3+posx*3)+2]);
                         fprintf(stderr, "Erreur: position des noeuds incorrects\n");
                         return 0;
                     }
                     
-                    */
-                   node = createNode(width,height,type,index,map->listenode);
+                    
+                  // node = createNode(width,height,type,index,map->listenode);
     
                     //printf("tmp alors = %d\n", tmp);
                }
