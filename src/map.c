@@ -16,7 +16,7 @@ Map loadMap(char *filename, Image *image)
     }
     else 
     {
-        printf("Impossible d'ouvrir la fichier.itd\n");
+        fprintf(stderr,"Impossible d'ouvrir la fichier.itd\n");
         exit(EXIT_FAILURE);
     }
    
@@ -29,13 +29,13 @@ int readMap(FILE * fichierITD, Map * map, Image *image)
     fgets(type, 5, fichierITD);
     if(strcmp(type, "@ITD") != 0)
     {
-        printf("le type est faux\n");
+        fprintf(stderr,"le type est faux\n");
         return 0;
     }
     int numero;
     fscanf(fichierITD, "%d\n", &numero);
     if(numero != 1) {
-       printf("le numero est faux\n");
+       fprintf(stderr,"le numero est faux\n");
        return 0;
     }
 
@@ -44,7 +44,7 @@ int readMap(FILE * fichierITD, Map * map, Image *image)
     fscanf(fichierITD, "%c", &commentaire);
     if(commentaire != '#')
     {
-        printf("il n'y a pas de commentaire\n");
+        fprintf(stderr,"il n'y a pas de commentaire\n");
         return 0;
     }
     char ligneCommentaire[TAILLE_MAX]= "";
@@ -56,7 +56,7 @@ int readMap(FILE * fichierITD, Map * map, Image *image)
     fgets(carte, 6, fichierITD);
     if(strcmp(carte, "carte") != 0)
     {
-        printf("il n'y a pas de carte\n");
+        fprintf(stderr,"il n'y a pas de carte\n");
         return 0;
     }
     fgetc(fichierITD);
@@ -66,7 +66,7 @@ int readMap(FILE * fichierITD, Map * map, Image *image)
     char imagecarte[15]="";
     char* extension = strstr(fichiercarte, ".ppm");
     if(extension == NULL){
-        printf("l'image n'est pas au bon format\n");
+        fprintf(stderr,"l'image n'est pas au bon format\n");
         return 0;
     }
     else {
@@ -91,7 +91,7 @@ int readMap(FILE * fichierITD, Map * map, Image *image)
     {
         fscanf(fichierITD, "%d %d %d\n", &cheminR, &cheminG, &cheminB);
         if(cheminR < 0 || cheminR > 255 || cheminG < 0 || cheminG > 255 || cheminB < 0 || cheminB > 255) {
-            printf("probleme couleurs chemin\n");
+            fprintf(stderr,"probleme couleurs chemin\n");
             return 0;
         }
         else {
@@ -100,7 +100,7 @@ int readMap(FILE * fichierITD, Map * map, Image *image)
     }
     else 
     {
-        printf("il n'y a pas de chemin\n");
+        fprintf(stderr,"il n'y a pas de chemin\n");
         return 0;
     }
 
@@ -112,7 +112,7 @@ int readMap(FILE * fichierITD, Map * map, Image *image)
     {
         fscanf(fichierITD, "%d %d %d\n", &noeudR, &noeudG, &noeudB);
         if(noeudR < 0 || noeudR > 255 || noeudG < 0 || noeudG > 255 || noeudB < 0 || noeudB > 255) {
-            printf("probleme couleurs noeud\n");
+            fprintf(stderr,"probleme couleurs noeud\n");
             return 0;
         }
         else {
@@ -121,7 +121,7 @@ int readMap(FILE * fichierITD, Map * map, Image *image)
     }
     else 
     {
-        printf("il n'y a pas de noeud\n");
+        fprintf(stderr,"il n'y a pas de noeud\n");
         return 0;
     }
 
@@ -133,7 +133,7 @@ int readMap(FILE * fichierITD, Map * map, Image *image)
     {
         fscanf(fichierITD, "%d %d %d\n", &constructR, &constructG, &constructB);
         if(constructR < 0 || constructR > 255 || constructG < 0 || constructG > 255 || constructB < 0 || constructB > 255) {
-            printf("probleme couleurs construct\n");
+            fprintf(stderr,"probleme couleurs construct\n");
             return 0;
         }
         else {
@@ -142,7 +142,7 @@ int readMap(FILE * fichierITD, Map * map, Image *image)
     }
     else 
     {
-        printf("il n'y a pas de construct\n");
+        fprintf(stderr,"il n'y a pas de construct\n");
         return 0;
     }
 
@@ -154,7 +154,7 @@ int readMap(FILE * fichierITD, Map * map, Image *image)
     {
         fscanf(fichierITD, "%d %d %d\n", &inR, &inG, &inB);
         if(inR < 0 || inR > 255 || inG < 0 || inG > 255 || inB < 0 || inB > 255) {
-            printf("probleme couleurs in\n");
+            fprintf(stderr,"probleme couleurs in\n");
             return 0;
         }
         else {
@@ -163,7 +163,7 @@ int readMap(FILE * fichierITD, Map * map, Image *image)
     }
     else 
     {
-        printf("il n'y a pas de in\n");
+        fprintf(stderr,"il n'y a pas de in\n");
         return 0;
     }
 
@@ -175,7 +175,7 @@ int readMap(FILE * fichierITD, Map * map, Image *image)
     {
         fscanf(fichierITD, "%d %d %d\n", &outR, &outG, &outB);
         if(outR < 0 || outR > 255 || outG < 0 || outG > 255 || outB < 0 || outB > 255) {
-            printf("probleme couleurs out\n");
+            fprintf(stderr,"probleme couleurs out\n");
             return 0;
         }
         else {
@@ -184,7 +184,7 @@ int readMap(FILE * fichierITD, Map * map, Image *image)
     }
     else 
     {
-        printf("il n'y a pas de out\n");
+        fprintf(stderr,"il n'y a pas de out\n");
         return 0;
     }
 
@@ -201,9 +201,9 @@ int readMap(FILE * fichierITD, Map * map, Image *image)
         nbLignes ++;
     }
   
-    printf("\nnbnode = %d, nbligne = %d\n", nbNode, nbLignes);
+    fprintf(stderr,"\nnbnode = %d, nbligne = %d\n", nbNode, nbLignes);
     if(nbNode != nbLignes) {
-        printf ("Nombre de noeuds différent du nombre de lignes\n");
+        fprintf(stderr,"Nombre de noeuds différent du nombre de lignes\n");
         return 0;
     }
     else {
@@ -215,6 +215,7 @@ int readMap(FILE * fichierITD, Map * map, Image *image)
     // Chargement de la carte
     char file[30] = "images/";
     strcat(file, imagecarte);
+    printf("file = %s", file);
     SDL_Surface* carteSurface = IMG_Load(file);
     if(carteSurface == NULL) {
         fprintf(stderr, "impossible de charger la carte %s\n", file);
@@ -297,7 +298,7 @@ int readMap(FILE * fichierITD, Map * map, Image *image)
                }else
                {
                     height = tmp;
-                    
+                    /*
                     if(map->noeud.red == image->data[width*height] && map->noeud.green == image->data[width*height+1] && map->noeud.blue == image->data[width*height+2]) 
                     {
                         node = createNode(width,height,type,index);
@@ -316,31 +317,31 @@ int readMap(FILE * fichierITD, Map * map, Image *image)
                         return 0;
                     }
                     
-                    
+                    */
                    node = createNode(width,height,type,index);
-                    printf("\nsfeqrgrg\n");
+    
                     printf("tmp alors 2 = %d", tmp);
                }
-               printf("\nyahoo\n");
+              
            }
-           printf("\nyahoo2\n");
+        
            if(nbArgument > 3)
            {
                printf("tmp alors = %d", tmp);
-               printf("\nyahoo3\n");
+               fprintf(stderr,"\nyahoo3\n");
                
                if(tmp < nbNode)
                {
-                    printf("ca va?\n");
+               
                     printf("%p", node);
                     printf("tmp = %d\n", tmp);
                     addSuccessors(tmp, node->successors);
-                    printf("oui!\n");
+                 
                }
                else
                {
                    fprintf(stderr, "Erreur: index des successeurs incorrect\n");
-                   return 0;
+                   return 1;
                }
             }
             nbArgument ++;

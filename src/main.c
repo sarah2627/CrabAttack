@@ -10,7 +10,10 @@ int main()
     Map map;
     Image image; //l'image qu'on va parcourir
     map = loadMap("./data/map_day.itd", &image);
-     saveImagePPM(&image, "images/output.ppm");
+    char file[30] = "images/";
+    strcat(file, map.carte);
+    printf("file = %s", file);
+    //printf("afficher chemin : %s", map.carte);
     freeImage(&image);
     return 0;
 }
