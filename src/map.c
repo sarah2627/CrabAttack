@@ -233,6 +233,7 @@ int readMap(FILE * fichierITD, Map * map, Image *image)
     size_t len = 0;
     printf("alors alors ?\n");
     Node *node = NULL;
+    map->listenode = NULL;
 
     while((getline(&line, &len, fichierITD)) != -1) {
         
@@ -323,7 +324,7 @@ int readMap(FILE * fichierITD, Map * map, Image *image)
                     }
                     
                     */
-                   node = createNode(width,height,type,index);
+                   node = createNode(width,height,type,index,map->listenode);
     
                     //printf("tmp alors = %d\n", tmp);
                }

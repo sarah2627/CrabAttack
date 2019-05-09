@@ -20,11 +20,12 @@ typedef struct node
     int type;
     float x;
     float y;
+    struct node *next;
     AdjacenceList successors; 
 }Node;
 
 
-Node* createNode(int x, int y, int type, int index);
+Node* createNode(int x, int y, int type, int index, Node* node);
 void addSuccessors(int value, AdjacenceList list);
 
 #endif
