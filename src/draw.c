@@ -1,3 +1,11 @@
+static float aspectRatio;
+/* Espace fenetre virtuelle */
+static const float GL_VIEW_SIZE = 200.;
+/* Nombre de bits par pixel de la fenetre */
+static const unsigned int BIT_PER_PIXEL = 32;
+/* Subdivisions cercle */
+static const int CIRCLE_SUBDIVS = 2<<5;
+
 #include "draw.h"
 
 void reshape(SDL_Surface** surface, unsigned int width, unsigned int height)
@@ -109,6 +117,31 @@ void drawOrigin()
     glColor3fv(currentColor);
 }
 
+
+//Fonction qui dessine un rectangle avec une texture, une largeur et une hauteur
+void drawMap(GLuint texture_id, int x, int y){
+    glEnable(GL_TEXTURE_2D);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glBindTexture(GL_TEXTURE_2D, texture_id);
+            glBegin(GL_QUADS);
+               glTexCoord2d(0, 0); 
+               glVertex2f(0, y);
+               glTexCoord2d(0, 1); 
+               glVertex2f(0, 0);
+               glTexCoord2d(1, 1); 
+               glVertex2f( x, 0);
+               glTexCoord2d(1, 0); 
+               glVertex2f( x, y);
+            glEnd();
+        glBindTexture(GL_TEXTURE_2D, 0);
+        glDisable(GL_BLEND);
+        glDisable(GL_TEXTURE_2D);
+        glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+
+
 void drawSquare(int filled) 
 {
     if(filled) 
@@ -205,3 +238,7 @@ void drawRoundedSquare(int filled)
 
     glEnd();
 }
+
+
+
+

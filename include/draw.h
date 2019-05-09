@@ -7,6 +7,7 @@
 #include <GL/glu.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <math.h>
 
 //chargement d'une image
 SDL_Surface* Image_Load(char* image_path);
@@ -14,6 +15,11 @@ SDL_Surface* Image_Load(char* image_path);
 GLuint Texture_Load(char* image_path);
 
 void reshape(SDL_Surface** surface, unsigned int width, unsigned int height);
+
+void drawOrigin();
+void drawSquare(int filled);
+void drawCircle(int filled);
+void drawRoundedSquare(int filled);
 
 
 #endif
