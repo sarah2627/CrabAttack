@@ -27,7 +27,7 @@ void reshape(SDL_Surface** surface, unsigned int width, unsigned int height)
     glViewport(0, 0, (*surface)->w, (*surface)->h);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    if( aspectRatio > 1) 
+    /*if( aspectRatio > 1) 
     {
         gluOrtho2D(
         -GL_VIEW_SIZE / 2. * aspectRatio, GL_VIEW_SIZE / 2. * aspectRatio, 
@@ -38,26 +38,32 @@ void reshape(SDL_Surface** surface, unsigned int width, unsigned int height)
         gluOrtho2D(
         -GL_VIEW_SIZE / 2., GL_VIEW_SIZE / 2.,
         -GL_VIEW_SIZE / 2. / aspectRatio, GL_VIEW_SIZE / 2. / aspectRatio);
-    }
+    }*/
 }
 
 
 // Chargement de l'image 
-SDL_Surface* Image_Load(char* image_path){
+/*SDL_Surface* Image_Load(char* image_path){
     SDL_Surface* image = IMG_Load(image_path);
     if(NULL == image) {
         fprintf(stderr, "Echec du chargement de l'image %s\n", image_path);
         exit(EXIT_FAILURE);
     }
     return image;
-}
+}*/
 
 
 // Initialisation de la texture (à partir de l'image)
+    /*
 GLuint Texture_Load(char* image_path){
     GLuint texture_id;
     //chargement de l'image
-    SDL_Surface* image = Image_Load(image_path);
+    //SDL_Surface* image = Image_Load(image_path);
+    SDL_Surface* image = IMG_Load(image_path);
+    if(NULL == image) {
+        fprintf(stderr, "Echec du chargement de l'image %s\n", image_path);
+        exit(EXIT_FAILURE);
+    }
 
     glGenTextures(1, &texture_id);
 
@@ -86,13 +92,13 @@ GLuint Texture_Load(char* image_path){
     glBindTexture(GL_TEXTURE_2D, 0);
     
     /* Liberation de la memoire allouee sur le GPU pour la texture */
-    glDeleteTextures(1, &texture_id);
+    //glDeleteTextures(1, &texture_id);
 
     /* Liberation de la mémoire occupee par img */ 
-    SDL_FreeSurface(image);
+//    SDL_FreeSurface(image);
 
-    return texture_id;
-}
+  //  return texture_id;
+//}
 
 //////////////////////////////////////
 ///////////OBJETS CANONIQUES//////////
@@ -119,29 +125,6 @@ void drawOrigin()
 
 
 //Fonction qui dessine un rectangle avec une texture, une largeur et une hauteur
-void drawMap(GLuint texture_id, int x, int y){
-    glEnable(GL_TEXTURE_2D);
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        glBindTexture(GL_TEXTURE_2D, texture_id);
-            glBegin(GL_QUADS);
-               glTexCoord2d(0, 0); 
-               glVertex2f(0, y);
-               glTexCoord2d(0, 1); 
-               glVertex2f(0, 0);
-               glTexCoord2d(1, 1); 
-               glVertex2f( x, 0);
-               glTexCoord2d(1, 0); 
-               glVertex2f( x, y);
-            glEnd();
-        glBindTexture(GL_TEXTURE_2D, 0);
-        glDisable(GL_BLEND);
-        glDisable(GL_TEXTURE_2D);
-        glBindTexture(GL_TEXTURE_2D, 0);
-}
-
-
-
 void drawSquare(int filled) 
 {
     if(filled) 
@@ -237,6 +220,28 @@ void drawRoundedSquare(int filled)
     glVertex2f(s, t);
 
     glEnd();
+}
+
+
+void drawMap(GLuint texture_id, float width, float height){
+  glEnable(GL_TEXTURE_2D);
+        glBindTexture(GL_TEXTURE_2D, texture_id);
+        glMatrixMode(GL_MODELVIEW);
+                glLoadIdentity();
+        glPushMatrix();
+            glBegin(GL_QUADS);
+               glTexCoord2d(0, 0); 
+               glVertex2f(-1, 1);
+               glTexCoord2d(0, 1); 
+               glVertex2f(-1,-1);
+               glTexCoord2d(1, 1); 
+               glVertex2f(1, -1);
+               glTexCoord2d(1, 0); 
+               glVertex2f(1, 1);
+            glEnd();
+        glPopMatrix();
+        glBindTexture(GL_TEXTURE_2D, 0);
+        glDisable(GL_TEXTURE_2D);
 }
 
 
