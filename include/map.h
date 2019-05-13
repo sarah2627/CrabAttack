@@ -17,6 +17,22 @@
     unsigned char green;
 } Color;
 
+typedef enum {
+    in,
+    out,
+    chemin,
+    construct,
+    noeud
+}tileType;
+
+typedef struct caseTab
+{
+    int x;
+    int y;
+    tileType type;
+
+}Case;
+
  typedef struct map
  {
     char *carte; // image ppm
@@ -30,10 +46,12 @@
  } Map;
  
 
+
  Map loadMap(char *filename, Image *image);
  int readMap(FILE * fichierITD, Map * map, Image *image);
  void printMapNode(Map map);
  Node * getNode(int index, Map map);
  Color newColor(float r, float g, float b);
+ tileType getColor(float r, float g, float b, Map map);
  
 #endif

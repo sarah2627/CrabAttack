@@ -221,6 +221,27 @@ int readMap(FILE * fichierITD, Map * map, Image *image)
         fprintf(stderr, "impossible de charger la carte %s\n", file);
         return 0;
     }
+    //image 30 par 30
+    int nbCaseW = carteSurface->w/30;
+    int nbCaseH = carteSurface->h/30;
+    int positionX;
+    int positionY;
+    int tabImage[nbCaseW][nbCaseH];
+    for(int i=15; i<nbCaseH; i+=30)
+    {
+        for(int j=15; j<nbCaseW; j+=30)
+        {
+            Case newCase;
+            
+            int r = ((int*)carteSurface->pixels)[((i*carteSurface->w + j)*3)];
+          //  float g = carteSurface->pixels[((i*carteSurface->w + j)*3)+1];
+            //float b = carteSurface->pixels[((i*carteSurface->w + j)*3)+2];
+            //newCase.type = getColor(r,g,b,map);
+            
+            tabImage[positionX][positionY];
+        }
+    }
+
     // création d'un tableau à partir de l'image ppm
     
     if(loadImagePPM(image, file) !=EXIT_SUCCESS)
@@ -401,6 +422,35 @@ Color newColor(float r, float g, float b){
 
 	return color;
 
+}
+
+tileType getColor(float r, float g, float b, Map map)
+{
+    if(r == map.in.red && g == map.in.green && b == map.in.blue)
+    {
+        printf("type in\n");
+        return in;
+    }
+    if(r == map.out.red && g == map.out.green && b == map.out.blue)
+    {
+        printf("type out\n");
+        return out;
+    }
+     if(r == map.chemin.red && g == map.chemin.green && b == map.chemin.blue)
+    {
+        printf("type chemin\n");
+        return chemin;
+    }
+    if(r == map.construct.red && g == map.construct.green && b == map.construct.blue)
+    {
+        printf("type construct\n");
+        return construct;
+    }
+     if(r == map.noeud.red && g == map.noeud.green && b == map.noeud.blue)
+    {
+        printf("type noeud\n");
+        return noeud;
+    }
 }
 
 void printMapNode(Map map)

@@ -18,6 +18,7 @@ int main()
     int index = 3;
     Node * node = getNode(index, map);
     
+    
     freeImage(&image);
     return 0;
 }
