@@ -25,8 +25,8 @@ typedef struct node
 }Node;
 
 
-Node* createNode(int x, int y, int type, int index, Node* node);
-void addSuccessors(int value, AdjacenceList list);
+Node* createNode(int x, int y, int type, int index, Node** node);
+void addSuccessors(int value, AdjacenceList *list);
 
 #endif
 

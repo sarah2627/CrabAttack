@@ -282,7 +282,7 @@ int readMap(FILE * fichierITD, Map * map, Image *image)
            }
            if(nbArgument == 2)
            {
-               printf("width : %d\n", carteSurface->w);
+             
                if(tmp < 0 || tmp > carteSurface->w)
                {
                    fprintf(stderr, "Erreur: largeur incorrecte\n");
@@ -314,7 +314,7 @@ int readMap(FILE * fichierITD, Map * map, Image *image)
                     {
                         if(map->in.red == image->data[(posy*image->width*3+posx*3)] && map->in.green == image->data[(posy*image->width*3+posx*3)+1] && map->in.blue == image->data[(posy*image->width*3+posx*3)+2]) 
                         {
-                            node = createNode(posx,posy,type,index,map->listenode);
+                            node = createNode(posx,posy,type,index,&map->listenode);
                         }
                         else
                         {
@@ -326,7 +326,7 @@ int readMap(FILE * fichierITD, Map * map, Image *image)
                     {
                         if(map->out.red == image->data[(posy*image->width*3+posx*3)] && map->out.green == image->data[(posy*image->width*3+posx*3)+1] && map->out.blue == image->data[(posy*image->width*3+posx*3)+2]) 
                         {
-                            node = createNode(posx,posy,type,index,map->listenode);
+                            node = createNode(posx,posy,type,index,&map->listenode);
                         }
                         else
                         {
@@ -338,7 +338,7 @@ int readMap(FILE * fichierITD, Map * map, Image *image)
                     {
                         if(map->noeud.red == image->data[(posy*image->width*3+posx*3)] && map->noeud.green == image->data[(posy*image->width*3+posx*3)+1] && map->noeud.blue == image->data[(posy*image->width*3+posx*3)+2]) 
                         {
-                            node = createNode(posx,posy,type,index,map->listenode);
+                            node = createNode(posx,posy,type,index,&map->listenode);
                         }
                         else
                         {
@@ -350,29 +350,6 @@ int readMap(FILE * fichierITD, Map * map, Image *image)
                         fprintf(stderr,"Error du type lors de la vérif des couleurs");
                         return 0;
                     }
-                    
-                    /*
-                    if(map->noeud.red == image->data[(posy*image->width*3+posx*3)] && map->noeud.green == image->data[(posy*image->width*3+posx*3)+1] && map->noeud.blue == image->data[(posy*image->width*3+posx*3)+2]) 
-                    {
-                        node = createNode(posx,posy,type,index,map->listenode);
-                    }
-                    else
-                    {
-                        printf("posX du pixel : %d\n", posx);
-                        printf("posY du pixel : %d\n", posy);
-                        printf("width du pixel : %d\n", image->width);
-                        printf("rouge = %d\n", map->noeud.red);
-                        printf("vert = %d\n", map->noeud.green);
-                        printf("bleu = %d\n", map->noeud.blue);
-                        // (y*width+x)*3+0 +1 +2
-
-                        printf("pixel 1: %d\n", image->data[(posy*image->width*3+posx*3)]);
-                        printf("pixel 2: %d\n", image->data[(posy*image->width*3+posx*3)+1]);
-                        printf("pixel 3: %d\n", image->data[(posy*image->width*3+posx*3)+2]);
-                        fprintf(stderr, "Erreur: position des noeuds incorrects\n");
-                        return 0;
-                    }
-                    */
                     
                   // node = createNode(width,height,type,index,map->listenode);
     
@@ -391,7 +368,7 @@ int readMap(FILE * fichierITD, Map * map, Image *image)
                
                     printf("ajout succ \n");
                     //printf("tmp = %d\n", tmp);
-                    addSuccessors(tmp, node->successors);
+                    addSuccessors(tmp, &node->successors);
                  
                }
                else
@@ -426,3 +403,61 @@ Color newColor(float r, float g, float b){
 
 }
 
+void printMapNode(Map map)
+{
+    if(map.listenode == NULL)
+    {
+        printf("erreur pour affichage liste\n");
+    }
+    else 
+    {
+        Node * actuel = map.listenode;
+        while (actuel != NULL)
+        {
+            printf("index : %d\n", actuel->index);
+           
+            if(actuel->successors == NULL)
+            {
+                printf("pas de successeur\n");
+            }
+            else
+            {
+                while (actuel->successors->next != NULL)
+                {
+                    printf("index succ  : %d\n", actuel->successors->index);
+                    actuel->successors = actuel->successors->next;
+                    
+                }
+                printf("index succ  : %d\n", actuel->successors->index);
+                
+                
+            }
+             actuel = actuel->next;  
+                      
+        }
+      
+    }
+}
+
+Node * getNode(int index, Map map)
+{
+    if(map.listenode == NULL)
+    {
+        fprintf(stderr,"Erreur liste NULL\n");
+        return NULL;
+    }
+    else
+    {
+        Node * actuel = map.listenode;
+        while (actuel != NULL)
+        {
+            if(actuel->index == index)
+            {
+                printf("WIN \n");
+                return actuel;
+            }
+            actuel = actuel->next;
+        }
+        return NULL;
+    }
+}

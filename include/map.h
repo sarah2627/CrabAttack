@@ -21,7 +21,7 @@
  {
     char *carte; // image ppm
     int nbNode;
-    Node *listenode;
+    Node *listenode; // Node* listenode = malloc(sizeof(Node));
     Color chemin;
     Color noeud;
     Color construct;
@@ -32,6 +32,8 @@
 
  Map loadMap(char *filename, Image *image);
  int readMap(FILE * fichierITD, Map * map, Image *image);
+ void printMapNode(Map map);
+ Node * getNode(int index, Map map);
  Color newColor(float r, float g, float b);
  
 #endif

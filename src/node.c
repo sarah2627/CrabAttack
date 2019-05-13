@@ -2,7 +2,7 @@
 #define MAX_TAILLE 20
 
 
-Node* createNode(int x, int y, int type, int index, Node* lstnode) {
+Node* createNode(int x, int y, int type, int index, Node** lstnode) {
 	Node* node = (Node*)malloc(sizeof(Node));
 	if(node == NULL) {
 		fprintf(stderr, "Node non alloué");
@@ -16,10 +16,10 @@ Node* createNode(int x, int y, int type, int index, Node* lstnode) {
 	node->successors = (AdjacenceList)malloc(MAX_TAILLE*sizeof(AdjacentNode));
     (*node).successors= NULL;
     
-    Node * tmp = lstnode;
+    Node * tmp = *lstnode;
     if(tmp==NULL)
     {
-        tmp=node;
+        *lstnode = node;
     }
     else
     {
@@ -28,13 +28,13 @@ Node* createNode(int x, int y, int type, int index, Node* lstnode) {
         }
         tmp->next = node;
     }
-    
+
 	return node;
 }
 
 
 
-void addSuccessors(int value, AdjacenceList list)
+void addSuccessors(int value, AdjacenceList *list)
 {
     printf("hello\n");
     AdjacentNode* new = (AdjacentNode *)malloc(sizeof(AdjacentNode));
@@ -45,18 +45,18 @@ void addSuccessors(int value, AdjacenceList list)
     new->index = value;
     new->next = NULL;
 
-    AdjacentNode *temp = list;
+    AdjacentNode *temp = *list;
    
     if (temp==NULL) 
     { 
-        temp = new;
+        *list = new;
     }
     else{
         while (temp->next != NULL) {
             printf("yo\n");
-            printf("%p\n", temp);
+   
             temp = temp->next;
-            printf("%p\n", temp);
+           
             printf("momo\n");
         }
    
@@ -65,3 +65,4 @@ void addSuccessors(int value, AdjacenceList list)
     }
 
 }
+
