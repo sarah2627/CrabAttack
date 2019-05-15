@@ -52,6 +52,8 @@ typedef struct caseTab
  void printMapNode(Map map);
  Node * getNode(int index, Map map);
  Color newColor(float r, float g, float b);
- tileType getColor(float r, float g, float b, Map map);
+ tileType getColor(unsigned char r, unsigned char g, unsigned char b, Map map);
+ void printType(tileType type);
+ void createTableau(Image image, int w, int h, Map map, Case tabCase[w][h]);
  
 #endif

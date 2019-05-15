@@ -17,7 +17,14 @@ int main()
     printMapNode(map);
     int index = 3;
     Node * node = getNode(index, map);
-    
+
+    int nbCaseW = image.width/30;
+    int nbCaseH = image.height/30;
+    Case tabCase[nbCaseW][nbCaseH];
+    createTableau(image, nbCaseW, nbCaseH,map, tabCase);
+ 
+    printType(tabCase[6][6].type);
+    printf("trouvé\n");
     
     freeImage(&image);
     return 0;

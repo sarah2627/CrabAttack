@@ -222,33 +222,40 @@ int readMap(FILE * fichierITD, Map * map, Image *image)
         return 0;
     }
     //image 30 par 30
+    /*
     int nbCaseW = carteSurface->w/30;
     int nbCaseH = carteSurface->h/30;
-    int positionX;
-    int positionY;
-    int tabImage[nbCaseW][nbCaseH];
-    for(int i=15; i<nbCaseH; i+=30)
+    
+    int positionY=0;
+    Case tabCase[nbCaseW][nbCaseH];
+    for(int i=15; i<carteSurface->h; i+=30)
     {
-        for(int j=15; j<nbCaseW; j+=30)
+        int positionX = 0;
+        for(int j=15; j<carteSurface->w; j+=30)
         {
             Case newCase;
-            
-            int r = ((int*)carteSurface->pixels)[((i*carteSurface->w + j)*3)];
-          //  float g = carteSurface->pixels[((i*carteSurface->w + j)*3)+1];
-            //float b = carteSurface->pixels[((i*carteSurface->w + j)*3)+2];
-            //newCase.type = getColor(r,g,b,map);
-            
-            tabImage[positionX][positionY];
+            unsigned char r = ((unsigned char*)carteSurface->pixels)[((i*carteSurface->w + j)*3)];
+            unsigned char g = ((unsigned char*)carteSurface->pixels)[((i*carteSurface->w + j)*3)+1];
+            unsigned char b = ((unsigned char*)carteSurface->pixels)[((i*carteSurface->w + j)*3)+2];
+            newCase.type = getColor(r,g,b,*map);
+            newCase.x = positionX;
+            newCase.y = positionY; 
+            tabCase[positionX][positionY] = newCase;
+            positionX++;
         }
+        positionY++;
     }
 
+    printType(tabCase[6][6].type);
+    printf("trouvé\n");
+    */
     // création d'un tableau à partir de l'image ppm
     
     if(loadImagePPM(image, file) !=EXIT_SUCCESS)
     {
         return EXIT_FAILURE;
     }
-    saveImagePPM(image,"output.ppm");
+   
    
     char *line = NULL;
     size_t len = 0;
@@ -424,7 +431,7 @@ Color newColor(float r, float g, float b){
 
 }
 
-tileType getColor(float r, float g, float b, Map map)
+tileType getColor(unsigned char r, unsigned char g, unsigned char b, Map map)
 {
     if(r == map.in.red && g == map.in.green && b == map.in.blue)
     {
@@ -510,4 +517,53 @@ Node * getNode(int index, Map map)
         }
         return NULL;
     }
+}
+
+
+void printType(tileType type)
+{
+    switch (type)
+    {
+    case in :
+        printf("in");
+        break;
+    case out :
+        printf("out");
+        break;
+    case chemin :
+        printf("chemin");
+        break;
+    case construct :
+        printf("construct");
+        break;
+    case noeud :
+        printf("noeud");
+        break;
+    default:
+        break;
+    }
+}
+
+void createTableau(Image image, int w, int h, Map map, Case tabCase[w][h])
+{
+    int positionY=0;
+    for(int i=15; i<image.height; i+=30)
+    {
+        int positionX = 0;
+        for(int j=15; j<image.width; j+=30)
+        {
+            Case newCase;
+            unsigned char r = image.data[((i*image.width + j)*3)];
+            unsigned char g = image.data[((i*image.width + j)*3)+1];
+            unsigned char b = image.data[((i*image.width + j)*3)+2];
+            newCase.type = getColor(r,g,b,map);
+            newCase.x = positionX;
+            newCase.y = positionY; 
+            tabCase[positionX][positionY] = newCase;
+            positionX++;
+        }
+        positionY++;
+    }
+    printf("fini\n");
+    
 }
