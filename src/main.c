@@ -3,6 +3,7 @@
 #include <math.h> 
 #include <GL/glut.h>
 
+#include "grid.h"
 #include "map.h"
 
 int main()

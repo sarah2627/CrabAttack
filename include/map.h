@@ -17,21 +17,6 @@
     unsigned char green;
 } Color;
 
-typedef enum {
-    in,
-    out,
-    chemin,
-    construct,
-    noeud
-}tileType;
-
-typedef struct caseTab
-{
-    int x;
-    int y;
-    tileType type;
-
-}Case;
 
  typedef struct map
  {
@@ -43,6 +28,7 @@ typedef struct caseTab
     Color construct;
     Color in;
     Color out;
+    Color sea;
  } Map;
  
 
@@ -52,8 +38,6 @@ typedef struct caseTab
  void printMapNode(Map map);
  Node * getNode(int index, Map map);
  Color newColor(float r, float g, float b);
- tileType getColor(unsigned char r, unsigned char g, unsigned char b, Map map);
- void printType(tileType type);
- void createTableau(Image image, int w, int h, Map map, Case tabCase[w][h]);
+
  
 #endif

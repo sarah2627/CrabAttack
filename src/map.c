@@ -188,6 +188,27 @@ int readMap(FILE * fichierITD, Map * map, Image *image)
         return 0;
     }
 
+     //neuvième ligne : couleur sea
+    char sea[4]="";
+    int seaR, seaG, seaB;
+    fgets(sea, 4, fichierITD);
+    if(strcmp(sea, "sea") ==0)
+    {
+        fscanf(fichierITD, "%d %d %d\n", &seaR, &seaG, &seaB);
+        if(seaR < 0 || seaR > 255 || seaG < 0 || seaG > 255 || seaB < 0 || seaB > 255) {
+            fprintf(stderr,"probleme couleurs sea\n");
+            return 0;
+        }
+        else {
+            (*map).sea = newColor(seaR, seaG, seaB);
+        } 
+    }
+    else 
+    {
+        fprintf(stderr,"il n'y a pas de out\n");
+        return 0;
+    }
+
     //nombre de noeuds vérification
     int nbNode;
     fscanf(fichierITD, "%d\n", &nbNode);
@@ -431,34 +452,6 @@ Color newColor(float r, float g, float b){
 
 }
 
-tileType getColor(unsigned char r, unsigned char g, unsigned char b, Map map)
-{
-    if(r == map.in.red && g == map.in.green && b == map.in.blue)
-    {
-        printf("type in\n");
-        return in;
-    }
-    if(r == map.out.red && g == map.out.green && b == map.out.blue)
-    {
-        printf("type out\n");
-        return out;
-    }
-     if(r == map.chemin.red && g == map.chemin.green && b == map.chemin.blue)
-    {
-        printf("type chemin\n");
-        return chemin;
-    }
-    if(r == map.construct.red && g == map.construct.green && b == map.construct.blue)
-    {
-        printf("type construct\n");
-        return construct;
-    }
-     if(r == map.noeud.red && g == map.noeud.green && b == map.noeud.blue)
-    {
-        printf("type noeud\n");
-        return noeud;
-    }
-}
 
 void printMapNode(Map map)
 {
@@ -519,51 +512,3 @@ Node * getNode(int index, Map map)
     }
 }
 
-
-void printType(tileType type)
-{
-    switch (type)
-    {
-    case in :
-        printf("in");
-        break;
-    case out :
-        printf("out");
-        break;
-    case chemin :
-        printf("chemin");
-        break;
-    case construct :
-        printf("construct");
-        break;
-    case noeud :
-        printf("noeud");
-        break;
-    default:
-        break;
-    }
-}
-
-void createTableau(Image image, int w, int h, Map map, Case tabCase[w][h])
-{
-    int positionY=0;
-    for(int i=15; i<image.height; i+=30)
-    {
-        int positionX = 0;
-        for(int j=15; j<image.width; j+=30)
-        {
-            Case newCase;
-            unsigned char r = image.data[((i*image.width + j)*3)];
-            unsigned char g = image.data[((i*image.width + j)*3)+1];
-            unsigned char b = image.data[((i*image.width + j)*3)+2];
-            newCase.type = getColor(r,g,b,map);
-            newCase.x = positionX;
-            newCase.y = positionY; 
-            tabCase[positionX][positionY] = newCase;
-            positionX++;
-        }
-        positionY++;
-    }
-    printf("fini\n");
-    
-}
