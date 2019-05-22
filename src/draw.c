@@ -27,7 +27,10 @@ void reshape(SDL_Surface** surface, unsigned int width, unsigned int height)
     glViewport(0, 0, (*surface)->w, (*surface)->h);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    if( aspectRatio > 1) 
+    gluOrtho2D(
+        0,1, 
+        0,1);
+    /*if( aspectRatio > 1) 
     {
         gluOrtho2D(
         -GL_VIEW_SIZE / 2. * aspectRatio, GL_VIEW_SIZE / 2. * aspectRatio, 
@@ -38,26 +41,25 @@ void reshape(SDL_Surface** surface, unsigned int width, unsigned int height)
         gluOrtho2D(
         -GL_VIEW_SIZE / 2., GL_VIEW_SIZE / 2.,
         -GL_VIEW_SIZE / 2. / aspectRatio, GL_VIEW_SIZE / 2. / aspectRatio);
-    }
+    }*/
 }
 
 
 // Chargement de l'image 
-SDL_Surface* Image_Load(char* image_path){
+/*SDL_Surface* Image_Load(char* image_path){
     SDL_Surface* image = IMG_Load(image_path);
     if(NULL == image) {
         fprintf(stderr, "Echec du chargement de l'image %s\n", image_path);
         exit(EXIT_FAILURE);
     }
     return image;
-}
+}*/
 
 
 // Initialisation de la texture (à partir de l'image)
-GLuint Texture_Load(char* image_path){
+
+GLuint Texture_Load(char* image_path,float texWidth, float texHeight){
     GLuint texture_id;
-    //chargement de l'image
-    SDL_Surface* image = Image_Load(image_path);
 
     glGenTextures(1, &texture_id);
 
@@ -65,7 +67,14 @@ GLuint Texture_Load(char* image_path){
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
+    glEnable(GL_BLEND);
+
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    SDL_Surface* image = IMG_Load(image_path);
+
     GLenum format;
+
     switch(image->format->BytesPerPixel) {
         case 1:
             format = GL_RED;
@@ -81,17 +90,19 @@ GLuint Texture_Load(char* image_path){
             return EXIT_FAILURE;
     }
 
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image->w, image->h, 0, format, GL_UNSIGNED_BYTE, image->pixels);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texWidth, texHeight, 0, format, GL_UNSIGNED_BYTE, image->pixels);
 
     glBindTexture(GL_TEXTURE_2D, 0);
-    
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
     /* Liberation de la memoire allouee sur le GPU pour la texture */
-    glDeleteTextures(1, &texture_id);
+    //glDeleteTextures(1, &texture_id);
 
     /* Liberation de la mémoire occupee par img */ 
     SDL_FreeSurface(image);
 
-    return texture_id;
+    return texture_id ;
 }
 
 //////////////////////////////////////
@@ -119,29 +130,6 @@ void drawOrigin()
 
 
 //Fonction qui dessine un rectangle avec une texture, une largeur et une hauteur
-void drawMap(GLuint texture_id, int x, int y){
-    glEnable(GL_TEXTURE_2D);
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        glBindTexture(GL_TEXTURE_2D, texture_id);
-            glBegin(GL_QUADS);
-               glTexCoord2d(0, 0); 
-               glVertex2f(0, y);
-               glTexCoord2d(0, 1); 
-               glVertex2f(0, 0);
-               glTexCoord2d(1, 1); 
-               glVertex2f( x, 0);
-               glTexCoord2d(1, 0); 
-               glVertex2f( x, y);
-            glEnd();
-        glBindTexture(GL_TEXTURE_2D, 0);
-        glDisable(GL_BLEND);
-        glDisable(GL_TEXTURE_2D);
-        glBindTexture(GL_TEXTURE_2D, 0);
-}
-
-
-
 void drawSquare(int filled) 
 {
     if(filled) 
@@ -240,5 +228,61 @@ void drawRoundedSquare(int filled)
 }
 
 
+void drawMap(GLuint texture_id, float x , float y , float width, float height){
+    if (texture_id != NULL)
+    {
+        glEnable(GL_TEXTURE_2D);
+        glBindTexture(GL_TEXTURE_2D, texture_id);
+        glMatrixMode(GL_MODELVIEW);
+                glLoadIdentity();
+        glPushMatrix();
+            glBegin(GL_QUADS);
+               glTexCoord2d(0, 0); 
+               glVertex2f(x-width/2,y+height/2);
+               glTexCoord2d(0, 1); 
+               glVertex2f(x-width/2,y-height/2);
+               glTexCoord2d(1, 1); 
+               glVertex2f(x+width/2,y-height/2);
+               glTexCoord2d(1, 0); 
+               glVertex2f(x+width/2,y+height/2);
+            glEnd();
+        glPopMatrix();
+        glBindTexture(GL_TEXTURE_2D, 0);
+        glDisable(GL_TEXTURE_2D);
+    }
+    else
+    {
+        fprintf(stderr, "Erreur de texture\n");
+    }
+    return 1;
+}
 
+/*
+char* choixMenu(float clickX, float clickY){
+    char* choix = 0;
+    //choix partie
+    if(clickX > 405 && clickX < 430 && clickY > 790 && clickY < 750){
+        choix = "PARTIE";
+    }
+    //choix guide
+    else if(clickX > 147 && clickX < 648 && clickY > 711 && clickY < 593){
+        choix = "GUIDE";
+    }
+    else{
+        fprintf(stderr, "erreur lors du choix du type\n");
+        //return "0";
+    }
+    return choix;
+}
 
+*/
+
+//construction de la tour
+void constructMenu(){
+        GLuint texture_fond_guide = Texture_Load("./images/guide_du_jeu_fond.png", 630, 630);
+        GLuint texture_guide = Texture_Load("./images/guide_du_jeu_parchemin.png", 630, 630);
+        GLuint texture_bouton_quitter = Texture_Load("./images/bouton_quitter.png", 31, 31);
+        drawMap(texture_fond_guide, 0.5, 0.5, 1, 1);
+        drawMap(texture_guide, 0.5, 0.5, 1, 1);
+        drawMap(texture_bouton_quitter, 0.85, 0.85, 0.1, 0.1);
+}

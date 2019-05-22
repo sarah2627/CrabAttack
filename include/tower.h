@@ -1,23 +1,36 @@
 #ifndef TOWER__
 #define TOWER__
 
+#include <SDL/SDL.h>
+#include <SDL/SDL_image.h>
+#include <GL/gl.h>
+#include <GL/glu.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <math.h>
+
+#include "draw.h"
+
+typedef enum{
+	ROCKET, LASER, MITRAILLETTE, HYBRIDE
+}TypeTower;
 
 typedef struct tower
 {
-  int puissance;
-  int portee;
-  int cadence;
-  char *type;
-  int cout;
-  int posX;
-  int posY;
-  struct tower *nextTower; 
+	TypeTower type;
+    int puissance;
+    int portee;
+    int cadence;
+    int cout;
+    float posX;
+    float posY;
+    struct tower *nextTower; 
   
 }Tower;
 
-Tower* createTower(int x, int y, char *type);
+Tower* createTower(float x, float y, TypeTower type);
+void constructTower(Tower* tower);
+TypeTower choixTower(int clickX, int clickY);
 
 #endif
