@@ -1,3 +1,5 @@
+#include "draw.h"
+
 static float aspectRatio;
 /* Espace fenetre virtuelle */
 static const float GL_VIEW_SIZE = 200.;
@@ -6,7 +8,7 @@ static const unsigned int BIT_PER_PIXEL = 32;
 /* Subdivisions cercle */
 static const int CIRCLE_SUBDIVS = 2<<5;
 
-#include "draw.h"
+
 
 void reshape(SDL_Surface** surface, unsigned int width, unsigned int height)
 { 

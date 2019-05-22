@@ -29,7 +29,7 @@ typedef struct tower
   
 }Tower;
 
-Tower* createTower(float x, float y, TypeTower type);
+Tower* createTower(float x, float y, TypeTower type, Tower ** list);
 void constructTower(Tower* tower);
 TypeTower choixTower(int clickX, int clickY);
 

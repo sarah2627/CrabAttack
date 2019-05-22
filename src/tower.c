@@ -2,7 +2,7 @@
 
 //création d'une tour
 
-Tower* createTower(float x, float y, TypeTower type)
+Tower* createTower(float x, float y, TypeTower type, Tower ** list)
 {
     Tower * newTower = malloc(sizeof(Tower));
     printf("Tour 3\n");
@@ -17,6 +17,19 @@ Tower* createTower(float x, float y, TypeTower type)
     newTower->type = type;
     newTower->nextTower = NULL;
 
+    Tower * tmp = *list;
+    if(tmp == NULL)
+    {
+        *list = newTower;
+    }else
+    {
+        while(tmp->nextTower != NULL)
+        {
+            tmp = tmp->nextTower;
+        }
+        tmp->nextTower = newTower;
+    }
+    
     switch(type){
         case ROCKET:
             newTower->puissance = 12;

@@ -38,7 +38,7 @@ int main()
     printType(tabCase[6][6].type);
     printf("trouvé\n");
 
-///////// Partie SDL ////////////
+//////////////////////////////////////// Partie SDL /////////////////////////////////////////////
     GLuint texture_map;
 
     int chgtTexture = 0;
@@ -102,8 +102,12 @@ int main()
     /* Boucle principale */
     int loop = 1;
 
-    Tower *newtoto;
-    newtoto = createTower(0.5, 0.5, LASER);
+    // création liste Tower
+    Tower * listTower = NULL;
+    // création Tour
+    Tower *newtoto = NULL;
+    // creer une liste de tower avec vérif si elle est nulle ou pas avant
+    newtoto = createTower(0.5, 0.5, LASER, &listTower);
 
       while(loop) 
     {
@@ -141,10 +145,10 @@ int main()
             
             // après verification de la postion
             constructTower(newtoto);
-
-            if(nbinfo_laser = 1){
+            /*
+            if(nbinfo_laser = 2){
                 drawMap(texture_info_laser, 0.5, 0.5, 0.5, 0.5);
-            }
+            }*/
         }
 
         //constructTower(tower);
@@ -219,6 +223,7 @@ int main()
                             positionX = e.button.x;
                             positionY = e.button.y;
                     
+                    //si on est dans la planche
                     if(positionX > 408 && positionX < 749 && positionY < 795 && positionY > 748){
                         towertype = choixTower(positionX, positionY);
                     }
@@ -226,9 +231,11 @@ int main()
                         if(towertype != -1)
                         {
                             printf("tour");
+                            // vérification à faire pour voir si on peut placer une tour
+                            // on renvoit les bonnes positions à newtoto
                             newtoto->posX = positionX/800.0;
                             newtoto->posY = positionY/800.0;
-                            
+                        
                             printf("Tour ctyuy");
                         }
                     }
