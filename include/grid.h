@@ -2,6 +2,7 @@
 #define GRID__
 
 #include "map.h"
+#include "tower.h"
 
 typedef enum {
     in,
@@ -17,7 +18,7 @@ typedef struct caseTab
     int x;
     int y;
     tileType type;
-
+    int vide;
 }Case;
 
 tileType getColor(unsigned char r, unsigned char g, unsigned char b, Map map);
