@@ -34,7 +34,7 @@ int main()
     int nbCaseH = image.height/30;
     Case tabCase[nbCaseW][nbCaseH];
     createTableau(image, nbCaseW, nbCaseH,map, tabCase);
- 
+    //printf("je suis la\n"); 
     printType(tabCase[6][6].type);
     printf("trouvé\n");
 
@@ -98,16 +98,19 @@ int main()
     int positionRX = 0;
     int positionRY = 0;
 
-
+    // Position Tour
+    int posTower = 0;
+    int positionTowerX = 0;
+    int positionTowerY = 0;
     /* Boucle principale */
     int loop = 1;
 
     // création liste Tower
     Tower * listTower = NULL;
     // création Tour
-    Tower *newtoto = NULL;
+    //Tower *newtoto = NULL;
     // creer une liste de tower avec vérif si elle est nulle ou pas avant
-    newtoto = createTower(0.5, 0.5, LASER, &listTower);
+    //newtoto = createTower(0.5, 0.5, LASER, &listTower);
 
       while(loop) 
     {
@@ -144,7 +147,29 @@ int main()
             drawMap(texture_bouton_palmier4, 0.85, 0.012, 0.05, 0.05);
             
             // après verification de la postion
-            constructTower(newtoto);
+            //createTower ici normalement
+            if(posTower != 0)
+            {
+                int tabX = positionTowerX/30;
+                int tabY = positionTowerY/30;
+
+                float mapX = positionTowerX/630.0;
+                float mapY = positionTowerY/630.0;
+
+                if(tabCase[tabX][tabY].vide == 0)
+                {
+                    tabCase[tabX][tabY].vide = 1;
+                    Tower *newTower = createTower(mapX,mapY,towertype,&listTower);
+                    constructTower(newTower);
+                    towertype = -1;
+                    posTower = 0;
+                }
+                else 
+                {
+                    printf("can not construct tower here");
+                }
+            }
+            //constructTower(newtoto);
             /*
             if(nbinfo_laser = 2){
                 drawMap(texture_info_laser, 0.5, 0.5, 0.5, 0.5);
@@ -233,9 +258,9 @@ int main()
                             printf("tour");
                             // vérification à faire pour voir si on peut placer une tour
                             // on renvoit les bonnes positions à newtoto
-                            newtoto->posX = positionX/800.0;
-                            newtoto->posY = positionY/800.0;
-                        
+                            positionTowerX = positionX;
+                            positionTowerY = positionY;
+                            posTower = 1;
                             printf("Tour ctyuy");
                         }
                     }

@@ -79,6 +79,7 @@ void createTableau(Image image, int w, int h, Map map, Case tabCase[w][h])
             unsigned char g = image.data[((i*image.width + j)*3)+1];
             unsigned char b = image.data[((i*image.width + j)*3)+2];
             newCase.type = getColor(r,g,b,map);
+            newCase.vide = 0;
             newCase.x = positionX;
             newCase.y = positionY; 
             tabCase[positionX][positionY] = newCase;

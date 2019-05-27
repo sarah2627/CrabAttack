@@ -242,34 +242,7 @@ int readMap(FILE * fichierITD, Map * map, Image *image)
         fprintf(stderr, "impossible de charger la carte %s\n", file);
         return 0;
     }
-    //image 30 par 30
-    /*
-    int nbCaseW = carteSurface->w/30;
-    int nbCaseH = carteSurface->h/30;
     
-    int positionY=0;
-    Case tabCase[nbCaseW][nbCaseH];
-    for(int i=15; i<carteSurface->h; i+=30)
-    {
-        int positionX = 0;
-        for(int j=15; j<carteSurface->w; j+=30)
-        {
-            Case newCase;
-            unsigned char r = ((unsigned char*)carteSurface->pixels)[((i*carteSurface->w + j)*3)];
-            unsigned char g = ((unsigned char*)carteSurface->pixels)[((i*carteSurface->w + j)*3)+1];
-            unsigned char b = ((unsigned char*)carteSurface->pixels)[((i*carteSurface->w + j)*3)+2];
-            newCase.type = getColor(r,g,b,*map);
-            newCase.x = positionX;
-            newCase.y = positionY; 
-            tabCase[positionX][positionY] = newCase;
-            positionX++;
-        }
-        positionY++;
-    }
-
-    printType(tabCase[6][6].type);
-    printf("trouvé\n");
-    */
     // création d'un tableau à partir de l'image ppm
     
     if(loadImagePPM(image, file) !=EXIT_SUCCESS)
@@ -353,10 +326,10 @@ int readMap(FILE * fichierITD, Map * map, Image *image)
                }else
                {
                     posy = tmp;
-                        printf("pixel 1: %d\n", image->data[(posy*image->width*3+posx*3)]);
-                        printf("pixel 2: %d\n", image->data[(posy*image->width*3+posx*3)+1]);
-                        printf("pixel 3: %d\n", image->data[(posy*image->width*3+posx*3)+2]);
-                        printf("type = %d\n", type);
+                        //printf("pixel 1: %d\n", image->data[(posy*image->width*3+posx*3)]);
+                        //printf("pixel 2: %d\n", image->data[(posy*image->width*3+posx*3)+1]);
+                        //printf("pixel 3: %d\n", image->data[(posy*image->width*3+posx*3)+2]);
+                        //printf("type = %d\n", type);
                         
 
                     if(type == 1)
