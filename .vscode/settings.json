@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "glut.h": "c",
-        "grid.h": "c"
+        "grid.h": "c",
+        "draw.h": "c"
     }
 }

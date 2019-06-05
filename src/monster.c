@@ -1,7 +1,7 @@
 #include "monster.h"
 #include "draw.h"
 
-Monster* createMonster(int index, int begin, TypeMonster type, Node* direction, float X, float Y, Monster** list){
+Monster* createMonster(int nbvague,int index, int begin, TypeMonster type, Node* direction, float X, float Y, Monster** list){
 	if (direction == NULL)
 	{
 		fprintf(stderr, "erreur\n");
@@ -23,24 +23,24 @@ Monster* createMonster(int index, int begin, TypeMonster type, Node* direction, 
 
 	switch(type){
 		case ROUGE:
-			monster-> pdv = 50;
-			monster-> pdvMax = 50;
+			monster-> pdv = 50 + 10*nbvague;
+			monster-> pdvMax = 50 + 10*nbvague;
 			monster-> resistance = 1;
 			monster-> vitesse = 0.5;
 			monster-> gain = 50;
 			break;
 
 		case BLEU:
-			monster-> pdv = 70;
-			monster-> pdvMax = 70;
+			monster-> pdv = 70+ 10*nbvague;
+			monster-> pdvMax = 70+ 10*nbvague;
 			monster-> resistance = 2;
 			monster-> vitesse = 1;
 			monster-> gain = 100;
 			break;
 
 		case MASSACREUR:
-			monster-> pdv = 100;
-			monster-> pdvMax = 100;
+			monster-> pdv = 100+ 10*nbvague;
+			monster-> pdvMax = 100+ 10*nbvague;
 			monster-> resistance = 3;
 			monster-> vitesse = 1.5;
 			monster-> gain = 150;
@@ -60,6 +60,8 @@ Monster* createMonster(int index, int begin, TypeMonster type, Node* direction, 
 		}
 		tmp->next = monster;
 	}
+
+
 	return monster;
 }
 
@@ -105,11 +107,11 @@ TypeMonster chooseMonster(int vague)
 {
 	TypeMonster type;
 	int choix = vague;
-	if( vague%5 == 0)
+	if( vague > 5)
 	{
 		type = MASSACREUR;
 	}
-	if( vague%2 == 0)
+	if( vague >= 2 && vague <=5)
 	{
 		type = BLEU;
 	}

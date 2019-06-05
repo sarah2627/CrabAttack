@@ -218,7 +218,7 @@ int readMap(FILE * fichierITD, Map * map, Image *image)
     char chaine[TAILLE_MAX] = "";
     while (fgets(chaine, TAILLE_MAX, fichierITD) != NULL)
     {
-        printf("%s", chaine);
+        //printf("%s", chaine);
         nbLignes ++;
     }
   
@@ -507,9 +507,9 @@ Node * getNode(int index, Map map)
 void cheminDijkstra(Map map, int* tabChemin )
 {
     //printMapNode(map);
-    printf("2) mais alors c'est possible %d\n", getNode(7,map)->index);
+    //printf("2) mais alors c'est possible %d\n", getNode(7,map)->index);
 
-    printf("ça marche?\n");
+    //printf("ça marche?\n");
     int tabValue[map.nbNode];
     // Initialisation du tableau 
     for(int i = 0; i<map.nbNode; i++)
@@ -575,13 +575,13 @@ void cheminDijkstra(Map map, int* tabChemin )
                 
             }
         }
-        printf("index du suivant : %d et sa valeur %d\n", indexMin, min);
+        //printf("index du suivant : %d et sa valeur %d\n", indexMin, min);
         route->next = getNode(indexMin,map);
         route = route->next;
-        printf("essai \n");
+        //printf("essai \n");
     }
-    printf("dernier index %d\n", route->index);
-    printf("3) mais alors c'est possible %d\n", getNode(7,map)->index);
+    //printf("dernier index %d\n", route->index);
+    //printf("3) mais alors c'est possible %d\n", getNode(7,map)->index);
   
     
     tabValue[1] = tabValue[route->index]+1;
@@ -589,8 +589,8 @@ void cheminDijkstra(Map map, int* tabChemin )
     //printf("dernier index %d\n", route->index);
     //printf("tabValue de 1 vaut %d\n",tabValue[1] );
     //printf("sommet dernier : %d\n",tabSommet[1] );
-    printf("ici ?\n");
-printf("4) mais alors c'est possible %d\n", getNode(7,map)->index);
+    //printf("ici ?\n");
+    //printf("4) mais alors c'est possible %d\n", getNode(7,map)->index);
     //free(route);
 
     //Node *chemin = (Node*)malloc(sizeof(Node));
@@ -606,54 +606,12 @@ printf("4) mais alors c'est possible %d\n", getNode(7,map)->index);
     } while (indexSommet !=0);
     tabChemin[cpt++]=indexSommet;
 
-    printf("5) mais alors c'est possible %d\n", getNode(7,map)->index);
-    for(int k=0; k<cpt; k++)
+    //printf("5) mais alors c'est possible %d\n", getNode(7,map)->index);
+    /*for(int k=0; k<cpt; k++)
     {
         printf("index %d valeur %d\n", k, tabChemin[k]);
     } 
-
-    /*
-    printf("je suis passee par la \n");
-    printf("6) mais alors c'est possible %d\n", getNode(7,map)->index);
-    printf("cpt = %d\n", cpt);
-    *firstchemin = getNode(tabChemin[cpt-1],map);
-    printf("index premier noeud %d\n", (*firstchemin)->index);
-    Node *chemin = *firstchemin;
-    printf("index premier noeud %d\n", chemin->index);
-    /*
-    if(firstchemin == NULL)
-    {
-        printf("cest nul\n");
-    }*/
-    
-    //chemin = getNode(7,map);
-    //printf("index 7 = %d\n", chemin->index);
-    /*while (chemin->type !=2)
-    {
-        
-    }*/
-    /*
-    for(int j =cpt-1; j>0;j--)
-    {   
-        //printf("index %d\n", j);
-        //printf("la valeur %d\n", tabChemin[j]);
-        chemin = getNode(tabChemin[j],map);
-        printf("chemin noeud %d\n", chemin->index);
-        chemin = chemin->next;
-    }
-    chemin = getNode(0,map);
-    chemin->next = NULL;
-
-    Node* printChemin = chemin;
-    while (printChemin != NULL)
-    {
-        printf("noeud %d\n", printChemin->index);
-        printChemin = printChemin->next;
-    }
-    
-    //printf("ce que je veux mettre %d\n", tabChemin[cpt-1]);
-    //printf("chemin premier noeud %d", chemin->index);
     */
-    //return tabChemin;   
+  
 
 }

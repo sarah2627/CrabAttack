@@ -31,7 +31,7 @@ typedef struct monster
 	struct monster *next;	
 }Monster;
 
-Monster* createMonster(int index, int begin, TypeMonster type, Node* direction, float X, float Y, Monster** list);
+Monster* createMonster(int nbvague,int index, int begin, TypeMonster type, Node* direction, float X, float Y, Monster** list);
 void constructMonster(Monster ** list);
 TypeMonster chooseMonster(int vague);
 Monster *getMonster(int index, Monster *listMonster);

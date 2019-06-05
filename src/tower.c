@@ -30,27 +30,27 @@ Tower* createTower(int index,float x, float y, TypeTower type, Tower ** list)
 
     switch(type){
         case ROCKET:
-            newTower->puissance = 10;
-            newTower->portee = 50;
-            newTower->cadence = 5;
+            newTower->puissance = 50;
+            newTower->portee = 60;
+            newTower->cadence = 100;
             newTower->cout = 300;
             break;
         case LASER:
-            newTower->puissance = 40;
-            newTower->portee = 15;
-            newTower->cadence= 15;
+            newTower->puissance = 30;
+            newTower->portee = 50;
+            newTower->cadence= 10;
             newTower->cout = 350;
             break;
         case MITRAILLETTE:
-            newTower->puissance = 30;
-            newTower->portee = 20;
-            newTower->cadence= 10;
+            newTower->puissance = 10;
+            newTower->portee = 30;
+            newTower->cadence= 5;
             newTower->cout = 450;
             break;
         case HYBRIDE:
-            newTower->puissance = 30;
-            newTower->portee = 30;
-            newTower->cadence= 10;
+            newTower->puissance = 10;
+            newTower->portee = 80;
+            newTower->cadence= 8;
             newTower->cout = 500;
             break;
 

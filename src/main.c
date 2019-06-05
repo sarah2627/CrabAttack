@@ -36,7 +36,7 @@ int main()
     map = loadMap("./data/map_day.itd", &image);
     char file[30] = "images/";
     strcat(file, map.carte);
-    printMapNode(map);
+    //printMapNode(map);
     int chemin[map.nbNode];
 
     Node *final = getNode(1, map);
@@ -349,11 +349,11 @@ int main()
                         if(H <= verifTower->portee){
                         //printf("pdv = %d\n", verifMonster->pdv );
                         //printf("KILLLL\n");
-                        verifMonster->pdv -= verifTower->puissance/verifMonster->resistance; 
+                        verifMonster->pdv -= verifTower->puissance; 
                         //printf("pdv = %d\n", verifMonster->pdv );
-                        if(verifMonster->pdv == 0)
+                        if(verifMonster->pdv == 0 || verifMonster->pdv < 0)
                         {
-                            argent = argent + verifMonster->gain;
+                            argent = argent + (verifMonster->gain*nbvagues);
                             sprintf(char_argent, "%d\n", argent);
                             sprintf(argent_restant, "%s", char_argent);
                             listMonster =  deleteMonster(verifMonster, listMonster);
@@ -379,7 +379,7 @@ int main()
                     indexDirection = indexBegin - 1;
                     begin = getNode(chemin[indexBegin], map);
                     direction = getNode(chemin[indexDirection], map);
-                    firstmonster = createMonster(indexMonster, indexDirection, monsterType, direction, begin->x, begin->y, &listMonster);
+                    firstmonster = createMonster(nbvagues,indexMonster, indexDirection, monsterType, direction, begin->x, begin->y, &listMonster);
                     indexMonster++;
                     nbMonster++;
                     //printf("getMOnster = %d\n", getMonster(indexMonster,listMonster)->indexMonster);
