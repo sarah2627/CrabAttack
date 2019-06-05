@@ -11,8 +11,8 @@
 #include <math.h>
 
 #include "draw.h"
-#include "construction.h"
-#include "grid.h"
+
+
 
 typedef enum{
 	ROCKET, LASER, MITRAILLETTE, HYBRIDE
@@ -37,5 +37,6 @@ void constructTower(Tower** list);
 TypeTower choixTower(int clickX, int clickY);
 int countTower(TypeTower type);
 Tower *getTower(int index, Tower *listTower);
+
 
 #endif

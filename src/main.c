@@ -277,6 +277,7 @@ int main()
                         argent = argent - newTower->cout;
                         sprintf(char_argent, "%d\n", argent);
                         sprintf(argent_restant, "%s", char_argent);
+                        VerifTower(listConstruction,newTower);
                         towertype = -1;
                         posTower = 0;
                         indexTower++;
@@ -529,7 +530,7 @@ int main()
                         argent = argent - newConstruction->cout;
                         sprintf(char_argent, "%d\n", argent);
                         sprintf(argent_restant, "%s", char_argent);
-                        VerifBatiment(newConstruction, listTower,  nbCaseW, nbCaseH, tabCase);
+                        VerifBatiment(newConstruction, listTower);
                         indexBat++;
                     }
                     constructiontype = -1;

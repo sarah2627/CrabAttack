@@ -10,9 +10,9 @@
 #include <string.h>
 #include <math.h>
 
-#include "draw.h"
-#include "grid.h"
 #include "tower.h"
+#include "draw.h"
+
 
 typedef enum{
 	RADAR, USINE, MUNITIONS
@@ -33,7 +33,8 @@ Construction* createConstruction(int index, float x, float y, TypeConstruction t
 void constructConstruction(Construction ** list);
 TypeConstruction choixConstruction(int clickX, int clickY);
 Construction * getConstruction(int index, Construction * listConstruction);
-void VerifBatiment(Construction *batiment, Tower *listTower,  int w, int h, Case tabCase[w][h]);
+void VerifBatiment(Construction *batiment, Tower *listTower);
+void VerifTower(Construction * listbatiment, Tower *tour);
 
 
 #endif
