@@ -19,6 +19,7 @@ typedef enum{
 typedef struct tower
 {
 	TypeTower type;
+	int index;
     int puissance;
     int portee;
     int cadence;
@@ -29,8 +30,10 @@ typedef struct tower
   
 }Tower;
 
-Tower* createTower(float x, float y, TypeTower type, Tower ** list);
-void constructTower(Tower* tower);
+Tower* createTower(int index, float x, float y, TypeTower type, Tower ** list);
+void constructTower(Tower** list);
 TypeTower choixTower(int clickX, int clickY);
+int countTower(TypeTower type);
+Tower *getTower(int index, Tower *listTower);
 
 #endif

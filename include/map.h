@@ -38,6 +38,8 @@
  void printMapNode(Map map);
  Node * getNode(int index, Map map);
  Color newColor(float r, float g, float b);
+ void cheminDijkstra(Map map, int* tabChemin);
+ //void recursivDijkstra(Node * chemin, int *tabSommet, int *tabValue, Map *map);
 
  
 #endif

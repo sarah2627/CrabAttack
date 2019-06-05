@@ -4,32 +4,32 @@ tileType getColor(unsigned char r, unsigned char g, unsigned char b, Map map)
 {
     if(r == map.in.red && g == map.in.green && b == map.in.blue)
     {
-        printf("type in\n");
+        //printf("type in\n");
         return in;
     }
     if(r == map.out.red && g == map.out.green && b == map.out.blue)
     {
-        printf("type out\n");
+        //printf("type out\n");
         return out;
     }
      if(r == map.chemin.red && g == map.chemin.green && b == map.chemin.blue)
     {
-        printf("type chemin\n");
+        //printf("type chemin\n");
         return chemin;
     }
     if(r == map.construct.red && g == map.construct.green && b == map.construct.blue)
     {
-        printf("type construct\n");
+        //printf("type construct\n");
         return construct;
     }
      if(r == map.noeud.red && g == map.noeud.green && b == map.noeud.blue)
     {
-        printf("type noeud\n");
+        //printf("type noeud\n");
         return noeud;
     }
      if(r == map.sea.red && g == map.sea.green && b == map.sea.blue)
     {
-        printf("type sea\n");
+        //printf("type sea\n");
         return sea;
     }
     else 
@@ -79,9 +79,10 @@ void createTableau(Image image, int w, int h, Map map, Case tabCase[w][h])
             unsigned char g = image.data[((i*image.width + j)*3)+1];
             unsigned char b = image.data[((i*image.width + j)*3)+2];
             newCase.type = getColor(r,g,b,map);
-            newCase.vide = 0;
             newCase.x = positionX;
             newCase.y = positionY; 
+            newCase.videTower = 0;
+            newCase.videBat = 0;
             tabCase[positionX][positionY] = newCase;
             positionX++;
         }

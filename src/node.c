@@ -36,7 +36,7 @@ Node* createNode(int x, int y, int type, int index, Node** lstnode) {
 
 void addSuccessors(int value, AdjacenceList *list)
 {
-    printf("hello\n");
+    //printf("hello\n");
     AdjacentNode* new = (AdjacentNode *)malloc(sizeof(AdjacentNode));
 
     if(!new) {
@@ -53,14 +53,14 @@ void addSuccessors(int value, AdjacenceList *list)
     }
     else{
         while (temp->next != NULL) {
-            printf("yo\n");
+            //printf("yo\n");
    
             temp = temp->next;
            
-            printf("momo\n");
+            //printf("momo\n");
         }
    
-        printf("alors?\n");
+        //printf("alors?\n");
         temp->next = new;
     }
 

@@ -26,4 +26,6 @@ void drawMap(GLuint texture_id, float x , float y , float width, float height);
 
 char *choixMenu(float clickX, float clickY);
 void constructMenu();
+void printText(void *text, char *info, float x, float y);
+
 #endif
