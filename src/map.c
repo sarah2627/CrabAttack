@@ -495,7 +495,7 @@ Node * getNode(int index, Map map)
             //printf("yooyoyoy\n");
             if(actuel->index == index)
             {
-                printf("WIN \n");
+                //printf("WIN \n");
                 return actuel;
             }
             actuel = actuel->next;

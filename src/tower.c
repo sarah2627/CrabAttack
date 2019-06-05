@@ -116,11 +116,11 @@ void constructTower(Tower** list){
             default:
                 break;
         
-    }
+        }
 
-    float posY = 1 - (tmp->posY/630.0);
-    float posX = tmp->posX/630.0;
-    drawMap(tower_texture, posX, posY , 0.05, 0.05);
+        float posY = 1 - (tmp->posY/630.0);
+        float posX = tmp->posX/630.0;
+        drawMap(tower_texture, posX, posY , 0.05, 0.05);
 
         tmp = tmp->nextTower;
     }

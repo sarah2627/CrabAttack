@@ -36,13 +36,7 @@ int main()
     map = loadMap("./data/map_day.itd", &image);
     char file[30] = "images/";
     strcat(file, map.carte);
-    printf("file = %s", file);
-    printf("afficher chemin : %s", map.carte);
     printMapNode(map);
-    printf("oon essaye\n");
-    printf("mais alors c'est possible %d\n", getNode(7,map)->index);
-    //int index = 3;
-    //Node * node = getNode(index, map);
     int chemin[map.nbNode];
 
     Node *final = getNode(1, map);
@@ -52,9 +46,6 @@ int main()
     int nbCaseH = image.height/30;
     Case tabCase[nbCaseW][nbCaseH];
     createTableau(image, nbCaseW, nbCaseH,map, tabCase);
-    //printf("Je suis là\n");
-    printType(tabCase[6][6].type);
-    printf("trouvé\n");
 
     ///////// Partie SDL ////////////
     GLuint texture_map;
@@ -108,11 +99,11 @@ int main()
     myargv[0] = strdup("test");
     glutInit(&myargc, myargv);
 
-    	//Ouverture d'une fenetre et creation d'un contexte OpenGL 
+    //Ouverture d'une fenetre et creation d'un contexte OpenGL 
     SDL_Surface* surface;
     reshape(&surface, WINDOW_WIDTH, WINDOW_HEIGHT);
 
-     //Initialisation du titre de la fenetre
+    //Initialisation du titre de la fenetre
     SDL_WM_SetCaption(WINDOW_TITLE, NULL);
 
     char carte[] = "./images/map_day.png";
@@ -172,9 +163,6 @@ int main()
     int positionTowerX = 0;
     int positionTowerY = 0;
 
-    //Create Monster
-    Monster *listMonster = NULL;
-
     //Create Construction
     Construction *listConstruction = NULL;
     Construction *newConstruction = NULL;
@@ -187,27 +175,37 @@ int main()
     printf("hellooooooooooooooooo\n");
     printf("tableau 2 = %d\n", chemin[2]);
 
+    //Create Monster
+    Monster *listMonster = NULL;
     int indexBegin =0;
+    int beginMonster = 0;
     for(int i = 0; i<map.nbNode; i++)
     {
         if(chemin[i] == 0)
         {
-            indexBegin = i;
+            beginMonster = i;
         }
     }
+    indexBegin = beginMonster;
     printf("begin index %d\n", indexBegin);
+    /*
     Node * begin = getNode(chemin[indexBegin], map);
     Monster *firstmonster = NULL;
     int indexDirection = indexBegin - 1;
     Node * direction = getNode(chemin[indexDirection], map);
-    int indexMonster = 0;
-
-    //firstmonster = createMonster(ROUGE, direction, begin->x, begin->y, &listMonster);
-    printf("position begin %f %f\n", begin->x, begin->y );
-    printf("position direction %f %f\n", direction->x, direction->y );
+    */
+    Monster *firstmonster = NULL;
+    int indexMonster = 1;
+    TypeMonster monsterType;
+    Node * begin = getNode(chemin[indexBegin], map);
+    int indexDirection = indexBegin - 1;
+    Node * direction = getNode(chemin[indexDirection], map);
+    //printf("position begin %f %f\n", begin->x, begin->y );
+    //printf("position direction %f %f\n", direction->x, direction->y );
 
     int movMonster = 0;
-
+    int nbvagues = 1;
+    int nbMonster = 0;
     int times = 0;
 
     /* Boucle principale */
@@ -284,10 +282,11 @@ int main()
                         indexTower++;
                     }
                 }
+                /*
                 else
                 {
                     printf("Can not construct tower here\n");
-                }
+                }*/
             }
 
             constructTower(&listTower);
@@ -357,7 +356,7 @@ int main()
                             argent = argent + verifMonster->gain;
                             sprintf(char_argent, "%d\n", argent);
                             sprintf(argent_restant, "%s", char_argent);
-                           listMonster =  deleteMonster(verifMonster, listMonster);
+                            listMonster =  deleteMonster(verifMonster, listMonster);
                         }
                         }
                     }
@@ -371,9 +370,31 @@ int main()
 
             /********************************** MONSTRE ****************************************/
             if(jeu->start == 1 && jeu->pause%2 == 0){
-                if(times%60 == 0 && indexMonster <= 2){
-                    firstmonster = createMonster(indexMonster, indexDirection, ROUGE, direction, begin->x, begin->y, &listMonster);
+
+                
+                if(times%80 == 0 && nbMonster <= 4){
+                    
+                    monsterType = chooseMonster(nbvagues);
+                    indexBegin = beginMonster;
+                    indexDirection = indexBegin - 1;
+                    begin = getNode(chemin[indexBegin], map);
+                    direction = getNode(chemin[indexDirection], map);
+                    firstmonster = createMonster(indexMonster, indexDirection, monsterType, direction, begin->x, begin->y, &listMonster);
                     indexMonster++;
+                    nbMonster++;
+                    //printf("getMOnster = %d\n", getMonster(indexMonster,listMonster)->indexMonster);
+                }
+                else if(times%600 == 0 && nbMonster == 5)
+                {
+                     //1000 millisecondes = 1 seconde ; faire pause :
+                    
+                        if(listMonster == NULL)
+                        {
+                            printf("on est là %d\n", times);
+                            nbMonster = 0;
+                            nbvagues ++;
+                        }
+                   
                 }
 
                 constructMonster(&listMonster);
@@ -436,6 +457,8 @@ int main()
                         mov = mov->next;
                     }
                 }
+
+                 times++; 
             }
 
             //informations des tours sur la map
@@ -510,9 +533,10 @@ int main()
                     constructiontype = -1;
                     posConstruction = 0;
                 }
+                /*
                 else{
                     printf("Can not construct batiments here\n");
-                }
+                }*/
             }
             constructConstruction(&listConstruction);
 
@@ -768,10 +792,6 @@ int main()
         if(elapsedTime < FRAMERATE_MILLISECONDS) 
         {
             SDL_Delay(FRAMERATE_MILLISECONDS - elapsedTime);
-        }
-        if(jeu->pause%2 == 0)
-        {
-            times++; 
         }
        
         elapsedTime = SDL_GetTicks() - startTime;

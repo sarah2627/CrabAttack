@@ -88,6 +88,5 @@ void createTableau(Image image, int w, int h, Map map, Case tabCase[w][h])
         }
         positionY++;
     }
-    printf("fini\n");
     
 }
