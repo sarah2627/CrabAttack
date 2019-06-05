@@ -28,15 +28,15 @@ Construction* createConstruction(int index,float x, float y, TypeConstruction ty
 
     switch(type){
         case RADAR:
-            newConstruction->portee = 15;
+            newConstruction->portee = 100;
             newConstruction->cout = 500;
             break;
         case USINE:
-            newConstruction->portee = 15;
+            newConstruction->portee = 100;
             newConstruction->cout = 200;
             break;
         case MUNITIONS:
-            newConstruction->portee = 15;
+            newConstruction->portee = 100;
             newConstruction->cout = 400;
             break;
 
@@ -76,7 +76,7 @@ TypeConstruction choixConstruction(int clickX, int clickY){
 void constructConstruction(Construction** list){
     GLuint construction_texture;
     Construction *tmp = *list;
-    if(tmp != NULL)
+    while(tmp != NULL)
     {   
         switch(tmp->type){
             case RADAR:
@@ -91,8 +91,9 @@ void constructConstruction(Construction** list){
             default:
                 break; 
         }
-        float posY = 1 - (tmp->posY);
-        drawMap(construction_texture, tmp->posX, posY , 0.05, 0.05);
+        float posY = 1 - (tmp->posY/630.0);
+        float posX = tmp->posX/630.0;
+        drawMap(construction_texture, posX, posY , 0.05, 0.05);
         tmp = tmp->nextConstruction;
     }
     //printf("construct construction ok\n");
@@ -131,4 +132,61 @@ Construction * getConstruction(int index, Construction * listConstruction){
         }
         return NULL;
     }
+}
+
+void VerifBatiment(Construction * batiment, Tower *listTower, int w, int h, Case tabCase[w][h])
+{
+    //printf("bien arrivé\n");
+    Construction * verifBat = batiment;   
+    Tower * verifTower = listTower;
+        while (verifTower != NULL)
+        {
+            double A = 0;
+            double B = 0;
+            double H2 = 0;
+            double H = 0; 
+            double result = 0;
+            if(verifBat->posX >= verifTower->posX){
+                A = verifBat->posX - verifTower->posX;
+            }
+            if(verifBat->posX < verifTower->posX){
+                A = verifTower->posX - verifBat->posX;
+            }
+            if(verifBat->posY >= verifTower->posY){
+                B = verifBat->posY - verifTower->posY;
+            }
+            if(verifBat->posY < verifTower->posY){
+                B = verifTower->posY - verifBat->posY;
+            }
+
+            H2 = pow(A,2) + pow(B,2);
+            H=sqrt(H2);
+            if(H <= verifBat->portee)
+            {
+                if(verifBat->type == RADAR)
+                {
+                    result = (verifTower->portee*25)/100; 
+                    verifTower->portee += result; 
+                    printf("coucou\n");
+                    printf(" result portee %d\n", verifTower->portee);
+                }
+                if(verifBat->type == USINE)
+                {
+                    result = (verifTower->puissance*25)/100; 
+                    verifTower->puissance += result; 
+                    printf("coucou\n");
+                    printf(" result puissance %d\n", verifTower->puissance);
+                }
+                if(verifBat->type == MUNITIONS)
+                {
+                    result = (verifTower->cadence*25)/100;
+                    verifTower->cadence += result; 
+                    printf("coucou\n");
+                    printf(" result cadence %d\n", verifTower->cadence);
+                }
+                
+            }
+            verifTower = verifTower->nextTower;
+        }
+
 }

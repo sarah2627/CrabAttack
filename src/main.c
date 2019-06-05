@@ -513,21 +513,23 @@ int main()
                 int tabX = positionConstructionX/30;
                 int tabY = positionConstructionY/30;
 
-                float mapX = positionConstructionX/630.0;
-                float mapY = positionConstructionY/630.0;
+                float mapX = positionConstructionX;
+                float mapY = positionConstructionY;
 
                 int coutConstruction = 0;
                 coutConstruction = countConstruction(constructiontype);
 
                 if(tabCase[tabX][tabY].videBat == 0 && tabCase[tabX][tabY].videTower == 0 && tabCase[tabX][tabY].type == construct){
-                    tabCase[tabX][tabY].videBat = indexBat;
+                    
 
                     //verification de l'argent pour l'achat du batiment
                     if(argent >= coutConstruction){
+                        tabCase[tabX][tabY].videBat = indexBat;
                         newConstruction = createConstruction(indexBat,mapX, mapY, constructiontype, &listConstruction);
                         argent = argent - newConstruction->cout;
                         sprintf(char_argent, "%d\n", argent);
                         sprintf(argent_restant, "%s", char_argent);
+                        VerifBatiment(newConstruction, listTower,  nbCaseW, nbCaseH, tabCase);
                         indexBat++;
                     }
                     constructiontype = -1;
@@ -550,6 +552,8 @@ int main()
                 drawMap(texture_info_munitions, 0.38, 0.18, 0.25, 0.20);
             }
 
+            // Portée des bâtiments
+            
             //informations des tours sur la map
             if(tabCase[positionRX/30][positionRY/30].videBat != 0)
             {

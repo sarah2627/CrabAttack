@@ -11,6 +11,8 @@
 #include <math.h>
 
 #include "draw.h"
+#include "construction.h"
+#include "grid.h"
 
 typedef enum{
 	ROCKET, LASER, MITRAILLETTE, HYBRIDE
