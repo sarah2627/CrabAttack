@@ -326,6 +326,51 @@ int main()
                 drawMap(texture_info_hybride_map,positionRX/630.0, 1 - positionRY/630.0, 0.25, 0.18);
             }
 
+            //informations des tours sur la map
+            if(tabCase[positionRX/30][positionRY/30].videTower != 0)
+            {
+                Tower * findTower = getTower(tabCase[positionRX/30][positionRY/30].videTower, listTower );
+                if(findTower->type == ROCKET)
+                {
+                    info_tower_rocket = 1;
+                }
+                else
+                {
+                    info_tower_rocket = 0;
+                }
+                if(findTower->type == LASER)
+                {
+                    info_tower_laser = 1;
+                }
+                else
+                {
+                    info_tower_laser = 0;
+                }
+                if(findTower->type == MITRAILLETTE)
+                {
+                    info_tower_mitraillette = 1;
+                }
+                else
+                {
+                    info_tower_mitraillette = 0;
+                }
+                if(findTower->type == HYBRIDE)
+                {
+                    info_tower_hybride = 1;
+                }
+                else
+                {
+                    info_tower_hybride = 0;
+                }
+            }
+            else
+            {
+                info_tower_rocket = 0;
+                info_tower_laser = 0;
+                info_tower_mitraillette = 0;
+                info_tower_hybride = 0;
+            }
+
             Tower *verifTower = listTower;
             while(verifTower != NULL)
             {
@@ -365,7 +410,6 @@ int main()
                             glColor3ub(255, 255, 255);
                         glEnd();
                         verifMonster->pdv -= verifTower->puissance; 
-                        //printf("pdv = %d\n", verifMonster->pdv );
                         if(verifMonster->pdv == 0 || verifMonster->pdv < 0)
                         {
                             argent = argent + (verifMonster->gain*nbvagues);
@@ -377,10 +421,10 @@ int main()
                     }
                     
                 verifMonster = verifMonster->next;
-                //printf("KILLLL2\n");
+            
                 }
                 verifTower = verifTower->nextTower;
-                //printf("KILLLL3\n");
+                
             }
 
             if(supprTower == 1)
@@ -390,6 +434,10 @@ int main()
                     int indexSuppr = tabCase[positionX/30][positionY/30].videTower;
                     Tower * TowerSupp = getTower(indexSuppr, listTower);
                     listTower = deleteTower(TowerSupp, listTower);
+                    tabCase[positionX/30][positionY/30].videTower = 0;
+                    argent = argent + TowerSupp->cout;
+                    sprintf(char_argent, "%d\n", argent);
+                    sprintf(argent_restant, "%s", char_argent);
                     supprTower = 0;
                 }
             }
@@ -494,50 +542,7 @@ int main()
                 }
             }
 
-            //informations des tours sur la map
-            if(tabCase[positionRX/30][positionRY/30].videTower != 0)
-            {
-                Tower * findTower = getTower(tabCase[positionRX/30][positionRY/30].videTower, listTower );
-                if(findTower->type == ROCKET)
-                {
-                    info_tower_rocket = 1;
-                }
-                else
-                {
-                    info_tower_rocket = 0;
-                }
-                if(findTower->type == LASER)
-                {
-                    info_tower_laser = 1;
-                }
-                else
-                {
-                    info_tower_laser = 0;
-                }
-                if(findTower->type == MITRAILLETTE)
-                {
-                    info_tower_mitraillette = 1;
-                }
-                else
-                {
-                    info_tower_mitraillette = 0;
-                }
-                if(findTower->type == HYBRIDE)
-                {
-                    info_tower_hybride = 1;
-                }
-                else
-                {
-                    info_tower_hybride = 0;
-                }
-            }
-            else
-            {
-                info_tower_rocket = 0;
-                info_tower_laser = 0;
-                info_tower_mitraillette = 0;
-                info_tower_hybride = 0;
-            }
+            
 
             /********************************** BATIMENTS ****************************************/
 

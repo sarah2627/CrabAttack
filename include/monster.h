@@ -11,6 +11,8 @@
 #include <math.h>
 
 #include "map.h"
+#include "draw.h"
+
 typedef enum{
 	ROUGE, BLEU, MASSACREUR
 }TypeMonster;
