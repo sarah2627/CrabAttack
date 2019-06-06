@@ -4,7 +4,7 @@
 Map loadMap(char *filename, Image *image)
 {
     FILE* fichierITD = fopen(filename, "r");
-    printf("fichier name :%s\n", filename);
+    //printf("fichier name :%s\n", filename);
     if (fichierITD != NULL)
     {
          Map map;
@@ -62,7 +62,6 @@ int readMap(FILE * fichierITD, Map * map, Image *image)
     fgetc(fichierITD);
     char fichiercarte[15]="";
     fgets(fichiercarte, 15, fichierITD);
-    //printf("fichier :%s", fichiercarte);
     char imagecarte[15]="";
     char* extension = strstr(fichiercarte, ".ppm");
     if(extension == NULL){
@@ -79,7 +78,6 @@ int readMap(FILE * fichierITD, Map * map, Image *image)
         cpt +=4;
         
         strncat(imagecarte, fichiercarte, cpt);
-        //printf("result : %s",imagecarte);  
         (*map).carte = imagecarte;
     }
 
@@ -218,7 +216,7 @@ int readMap(FILE * fichierITD, Map * map, Image *image)
     char chaine[TAILLE_MAX] = "";
     while (fgets(chaine, TAILLE_MAX, fichierITD) != NULL)
     {
-        //printf("%s", chaine);
+  
         nbLignes ++;
     }
   
@@ -236,41 +234,11 @@ int readMap(FILE * fichierITD, Map * map, Image *image)
     // Chargement de la carte
     char file[30] = "images/";
     strcat(file, imagecarte);
-    //printf("file = %s", file);
     SDL_Surface* carteSurface = IMG_Load(file);
     if(carteSurface == NULL) {
         fprintf(stderr, "impossible de charger la carte %s\n", file);
         return 0;
     }
-    //image 30 par 30
-    /*
-    int nbCaseW = carteSurface->w/30;
-    int nbCaseH = carteSurface->h/30;
-    
-    int positionY=0;
-    Case tabCase[nbCaseW][nbCaseH];
-    for(int i=15; i<carteSurface->h; i+=30)
-    {
-        int positionX = 0;
-        for(int j=15; j<carteSurface->w; j+=30)
-        {
-            Case newCase;
-            unsigned char r = ((unsigned char*)carteSurface->pixels)[((i*carteSurface->w + j)*3)];
-            unsigned char g = ((unsigned char*)carteSurface->pixels)[((i*carteSurface->w + j)*3)+1];
-            unsigned char b = ((unsigned char*)carteSurface->pixels)[((i*carteSurface->w + j)*3)+2];
-            newCase.type = getColor(r,g,b,*map);
-            newCase.x = positionX;
-            newCase.y = positionY; 
-            tabCase[positionX][positionY] = newCase;
-            positionX++;
-        }
-        positionY++;
-    }
-
-    printType(tabCase[6][6].type);
-    printf("trouvé\n");
-    */
-    // création d'un tableau à partir de l'image ppm
     
     if(loadImagePPM(image, file) !=EXIT_SUCCESS)
     {
@@ -283,9 +251,9 @@ int readMap(FILE * fichierITD, Map * map, Image *image)
     Node *node = NULL;
     map->listenode = NULL;
 
+    // lecture des noeuds ligne par ligne
     while((getline(&line, &len, fichierITD)) != -1) {
         
-       //printf("%s", line);
        char tmpstring[10];
        int tmp = 0;
        int nbArgument =0;
@@ -293,14 +261,13 @@ int readMap(FILE * fichierITD, Map * map, Image *image)
        int type=0;
        int posx=0;
        int posy=0;
-       //sscanf(line, "%d", tmp);
-       //printf("sscanf= %d\n", sscanf(line, "%s", tmpstring));
-       //printf("et bien voila le result = %d\n", tmp);
+     
        while(sscanf(line, "%s", tmpstring) == 1)
        {
            tmp = atoi(tmpstring);
            int tailletmp = strlen(tmpstring);
-           //printf("tmp = %d et taille %d\n", tmp, tailletmp);
+
+           // on récupère l'index
            if(nbArgument == 0)
            {
                if(tmp<0 || tmp>nbNode)
@@ -315,6 +282,7 @@ int readMap(FILE * fichierITD, Map * map, Image *image)
                
               
            }
+           // on récupère le type
            if(nbArgument == 1)
            {
                //verification
@@ -328,6 +296,7 @@ int readMap(FILE * fichierITD, Map * map, Image *image)
                }
               
            }
+           // on récupère la position x
            if(nbArgument == 2)
            {
              
@@ -342,6 +311,7 @@ int readMap(FILE * fichierITD, Map * map, Image *image)
                }
                
            }
+           // on récupère la position y
            if(nbArgument == 3)
            {
                
@@ -352,16 +322,13 @@ int readMap(FILE * fichierITD, Map * map, Image *image)
                }else
                {
                     posy = tmp;
-                    // printf("pixel 1: %d\n", image->data[(posy*image->width*3+posx*3)]);
-                    //printf("pixel 2: %d\n", image->data[(posy*image->width*3+posx*3)+1]);
-                    //printf("pixel 3: %d\n", image->data[(posy*image->width*3+posx*3)+2]);
-                    //printf("type = %d\n", type);
-                        
-
+                
                     if(type == 1)
                     {
+                        // on vérifie la position du noeud sur la map
                         if(map->in.red == image->data[(posy*image->width*3+posx*3)] && map->in.green == image->data[(posy*image->width*3+posx*3)+1] && map->in.blue == image->data[(posy*image->width*3+posx*3)+2]) 
                         {
+                            // on crée le noeud
                             node = createNode(posx,posy,type,index,&map->listenode);
                         }
                         else
@@ -372,8 +339,10 @@ int readMap(FILE * fichierITD, Map * map, Image *image)
                     }
                     else if(type == 2)
                     {
+                        // on vérifie la position du noeud sur la map
                         if(map->out.red == image->data[(posy*image->width*3+posx*3)] && map->out.green == image->data[(posy*image->width*3+posx*3)+1] && map->out.blue == image->data[(posy*image->width*3+posx*3)+2]) 
                         {
+                            // on crée le noeud
                             node = createNode(posx,posy,type,index,&map->listenode);
                         }
                         else
@@ -384,8 +353,10 @@ int readMap(FILE * fichierITD, Map * map, Image *image)
                     }
                     else if(type == 3 || type == 4)
                     {
+                        // on vérifie la position du noeud sur la map
                         if(map->noeud.red == image->data[(posy*image->width*3+posx*3)] && map->noeud.green == image->data[(posy*image->width*3+posx*3)+1] && map->noeud.blue == image->data[(posy*image->width*3+posx*3)+2]) 
                         {
+                            // on crée le noeud
                             node = createNode(posx,posy,type,index,&map->listenode);
                         }
                         else
@@ -399,9 +370,6 @@ int readMap(FILE * fichierITD, Map * map, Image *image)
                         return 0;
                     }
                     
-                  // node = createNode(width,height,type,index,map->listenode);
-    
-                    //printf("tmp alors = %d\n", tmp);
                }
               
            }
@@ -410,6 +378,7 @@ int readMap(FILE * fichierITD, Map * map, Image *image)
            { 
                if(tmp < nbNode)
                {  
+                    // on crée sa liste de successeurs 
                     addSuccessors(tmp, &node->successors);   
                }
                else
@@ -423,7 +392,6 @@ int readMap(FILE * fichierITD, Map * map, Image *image)
        }
     }
 
-    printf("\nvictoirrreeee \n");
     SDL_FreeSurface(carteSurface);
     return 1;
 
@@ -492,10 +460,10 @@ Node * getNode(int index, Map map)
         Node * actuel = map.listenode;
         while (actuel != NULL)
         {
-            //printf("yooyoyoy\n");
+        
             if(actuel->index == index)
             {
-                //printf("WIN \n");
+            
                 return actuel;
             }
             actuel = actuel->next;
@@ -506,50 +474,45 @@ Node * getNode(int index, Map map)
 
 void cheminDijkstra(Map map, int* tabChemin )
 {
-    //printMapNode(map);
-    //printf("2) mais alors c'est possible %d\n", getNode(7,map)->index);
-
-    //printf("ça marche?\n");
+    
+    // on crée trois tableaux
     int tabValue[map.nbNode];
-    // Initialisation du tableau 
-    for(int i = 0; i<map.nbNode; i++)
+    int tabSommet[map.nbNode];
+    int tabVerif[map.nbNode];
+    
+    // on les initialise
+     for(int i = 0; i<map.nbNode; i++)
     {
         tabValue[i]= 255;
-    }
-
-    int tabSommet[map.nbNode];
-    // Initialisation du tableau 
-    for(int i = 0; i<map.nbNode; i++)
-    {
         tabSommet[i]= -1;
-    }
-    int tabVerif[map.nbNode];
-    for(int i = 0; i<map.nbNode; i++)
-    {
         tabVerif[i]= -1;
     }
 
-    //Node *route = *chemin;
+  
     Node *route = map.listenode;
+    // on commence par le sommet 0
     tabSommet[route->index]=route->index;
     tabValue[route->index]=0;
+    // tant que notre noeud n'est pas de type out
     while(route->type != 2 && route->next !=NULL)
     {
     
         Node *tmp = route;
-        //int tabIndex[3] = {0,0,0};
-        //int cpt = 0;
+       
         while (tmp->successors != NULL)
         {
             tabVerif[route->index] =0;
+            // on vérifie si le noeud successeur a déjà une valeur 
             if(tabSommet[tmp->successors->index] != -1 && tabValue[tmp->successors->index] != 255)
             {
+                // si notre valeur est inférieure à la valeur déjà présente dans notre tableau (on veut récupérer la plus petite valeur)
                 if((tabValue[tmp->index]+1) < tabValue[tmp->successors->index])
                 {
                     tabSommet[tmp->successors->index] = route->index;
                     tabValue[tmp->successors->index] = tabValue[tmp->index]+1;
                 }
             }
+            // si le noeud n'a jamais été successeur 
             if(tabSommet[tmp->successors->index] == -1 )
             {
                 tabSommet[tmp->successors->index] = route->index;
@@ -562,7 +525,7 @@ void cheminDijkstra(Map map, int* tabChemin )
         
         int min = 255;
         int indexMin = 0;
-        
+        // on cherche la valeur la plus petite dans notre tableau parmi les noeuds pas encore visités
         for(int j=0; j<map.nbNode; j++)
         {
             if(tabVerif[j] != 0 && tabValue[j] != 255)
@@ -575,28 +538,19 @@ void cheminDijkstra(Map map, int* tabChemin )
                 
             }
         }
-        //printf("index du suivant : %d et sa valeur %d\n", indexMin, min);
+        
         route->next = getNode(indexMin,map);
         route = route->next;
-        //printf("essai \n");
+     
     }
-    //printf("dernier index %d\n", route->index);
-    //printf("3) mais alors c'est possible %d\n", getNode(7,map)->index);
+
   
     
     tabValue[1] = tabValue[route->index]+1;
     tabSommet[1] = route->index;
-    //printf("dernier index %d\n", route->index);
-    //printf("tabValue de 1 vaut %d\n",tabValue[1] );
-    //printf("sommet dernier : %d\n",tabSommet[1] );
-    //printf("ici ?\n");
-    //printf("4) mais alors c'est possible %d\n", getNode(7,map)->index);
-    //free(route);
-
-    //Node *chemin = (Node*)malloc(sizeof(Node));
-    Node **firstchemin = (Node**)malloc(sizeof(Node));
+    
+    // on remplie notre tableau chemin qui contient le chemin le plus court
     int indexSommet = 1;
-    //int tabChemin[map.nbNode];
     int cpt=0;
     do
     {
@@ -604,14 +558,6 @@ void cheminDijkstra(Map map, int* tabChemin )
         indexSommet = tabSommet[indexSommet]; 
         cpt++;
     } while (indexSommet !=0);
-    tabChemin[cpt++]=indexSommet;
-
-    //printf("5) mais alors c'est possible %d\n", getNode(7,map)->index);
-    /*for(int k=0; k<cpt; k++)
-    {
-        printf("index %d valeur %d\n", k, tabChemin[k]);
-    } 
-    */
-  
+    tabChemin[cpt++]=indexSommet; 
 
 }

@@ -1,6 +1,7 @@
 #include "monster.h"
 #include "draw.h"
 
+// création du monstre
 Monster* createMonster(int nbvague,int index, int begin, TypeMonster type, Node* direction, float X, float Y, Monster** list){
 	if (direction == NULL)
 	{
@@ -23,32 +24,33 @@ Monster* createMonster(int nbvague,int index, int begin, TypeMonster type, Node*
 
 	switch(type){
 		case ROUGE:
-			monster-> pdv = 50 + 10*nbvague;
+			monster-> pdv = 80 + 10*nbvague;
 			monster-> pdvMax = 50 + 10*nbvague;
 			monster-> resistance = 1;
 			monster-> vitesse = 0.5;
-			monster-> gain = 50;
+			monster-> gain = 10;
 			break;
 
 		case BLEU:
-			monster-> pdv = 70+ 10*nbvague;
+			monster-> pdv = 100 + 10*nbvague;
 			monster-> pdvMax = 70+ 10*nbvague;
 			monster-> resistance = 2;
 			monster-> vitesse = 1;
-			monster-> gain = 100;
+			monster-> gain = 25;
 			break;
 
 		case MASSACREUR:
-			monster-> pdv = 100+ 10*nbvague;
+			monster-> pdv = 150 + 10*nbvague;
 			monster-> pdvMax = 100+ 10*nbvague;
 			monster-> resistance = 3;
 			monster-> vitesse = 1.5;
-			monster-> gain = 150;
+			monster-> gain = 50;
 			break;
 
 		default:
 			break;
 	}
+
 	monster->next = NULL;
 	Monster* tmp = *list;
 	if(tmp == NULL){
@@ -65,11 +67,11 @@ Monster* createMonster(int nbvague,int index, int begin, TypeMonster type, Node*
 	return monster;
 }
 
+// construit le monstre
 void constructMonster(Monster ** list)
 {
 	GLuint monster_texture;
 	Monster *tmp = *list;
-	//monster_texture = Texture_Load("./images/crabe_rouge.png", 31, 31);
 	while(tmp != NULL)
 	{
 		switch(tmp->type){
@@ -89,7 +91,9 @@ void constructMonster(Monster ** list)
 
 		float Y = 1 - (tmp->Y/630.0);
 		float X = tmp->X/630.0;
-		float L = (0.05*tmp->pdv)/tmp->pdvMax;
+		float L = (0.02*tmp->pdv)/tmp->pdvMax;
+
+		// on affiche la barre de vie du monstre
 		glPushMatrix();
 			glTranslatef(X+0.05, Y+0.025, 0.0);
 			glPushMatrix();
@@ -103,15 +107,15 @@ void constructMonster(Monster ** list)
 	}
 }
 
+// définit le type du monstre en fonction de la vague
 TypeMonster chooseMonster(int vague)
 {
 	TypeMonster type;
-	int choix = vague;
 	if( vague%5 == 0)
 	{
 		type = MASSACREUR;
 	}
-	else if( vague%2 == 0)
+	if( vague%2 == 0)
 	{
 		type = BLEU;
 	}
@@ -122,6 +126,7 @@ TypeMonster chooseMonster(int vague)
 	return type;
 }
 
+// cherche un monstre
 Monster * getMonster(int index, Monster *listMonster)
 {
 	if(listMonster == NULL)
@@ -144,6 +149,7 @@ Monster * getMonster(int index, Monster *listMonster)
     }
 }
 
+// supprime le monstre de la liste
 Monster* deleteMonster(Monster *monstre, Monster *listMonster)
 {
 	Monster * deleteM = getMonster(monstre->indexMonster, listMonster);

@@ -54,17 +54,14 @@ TypeConstruction choixConstruction(int clickX, int clickY){
     //choix radar
     if(clickX > 196 && clickX < 218 && clickY > 572 && clickY < 602){
         type = RADAR;
-        printf("OK radar\n");
     }
     //choix usine
     else if(clickX > 239 && clickX < 263 && clickY > 572 && clickY < 602){
         type = USINE;
-        printf("OK usine\n");
     }
     //choix munitions
     else if(clickX > 285 && clickX < 320 && clickY > 572 && clickY < 602){
         type = MUNITIONS;
-        printf("OK munitions\n");
     }
     else{
         fprintf(stderr, "erreur lors du choix du type\n");
@@ -96,9 +93,9 @@ void constructConstruction(Construction** list){
         drawMap(construction_texture, posX, posY , 0.05, 0.05);
         tmp = tmp->nextConstruction;
     }
-    //printf("construct construction ok\n");
 }
 
+// connaitre le cout de la construction en fonction d'un type 
 int countConstruction(TypeConstruction type){
     int cout;
     if(type == RADAR)
@@ -116,6 +113,7 @@ int countConstruction(TypeConstruction type){
     return cout;
 }
 
+// on cherche un batiment
 Construction * getConstruction(int index, Construction * listConstruction){
     if(listConstruction == NULL){
         fprintf(stderr, "erreur liste nulle\n");
@@ -135,10 +133,10 @@ Construction * getConstruction(int index, Construction * listConstruction){
 }
 
 
-
+// on vérifie si le batiment est à coté d'une tour
 void VerifBatiment(Construction * batiment, Tower *listTower)
 {
-    //printf("bien arrivé\n");
+
     Construction * verifBat = batiment;   
     Tower * verifTower = listTower;
         while (verifTower != NULL)
@@ -160,31 +158,32 @@ void VerifBatiment(Construction * batiment, Tower *listTower)
             if(verifBat->posY < verifTower->posY){
                 B = verifTower->posY - verifBat->posY;
             }
-
+            // on calcule la distance entre le batiment et la tour
             H2 = pow(A,2) + pow(B,2);
             H=sqrt(H2);
+            // si la tour est dans la portée du batiment
             if(H <= verifBat->portee)
             {
                 if(verifBat->type == RADAR)
                 {
+                    // on augmente la porte de 25%
                     result = (verifTower->portee*25)/100; 
                     verifTower->portee += result; 
-                    printf("coucou\n");
-                    printf(" result portee %d\n", verifTower->portee);
+                    
                 }
                 if(verifBat->type == USINE)
                 {
+                    // on augmente la puissance de 25%
                     result = (verifTower->puissance*25)/100; 
                     verifTower->puissance += result; 
-                    printf("coucou\n");
-                    printf(" result puissance %d\n", verifTower->puissance);
+          
                 }
                 if(verifBat->type == MUNITIONS)
                 {
+                    // on augmente la cadence de 25%
                     result = (verifTower->cadence*25)/100;
                     verifTower->cadence += result; 
-                    printf("coucou\n");
-                    printf(" result cadence %d\n", verifTower->cadence);
+              
                 }
                 
             }
@@ -194,9 +193,10 @@ void VerifBatiment(Construction * batiment, Tower *listTower)
 }
 
 
+// on vérifie si la tour est à coté d'un batiment
 void VerifTower(Construction * listbatiment, Tower *tour)
 {
-    //printf("bien arrivé\n");
+
     Construction * verifBat = listbatiment;   
     Tower * verifTower = tour;
         while (verifBat != NULL)
@@ -218,31 +218,32 @@ void VerifTower(Construction * listbatiment, Tower *tour)
             if(verifBat->posY < verifTower->posY){
                 B = verifTower->posY - verifBat->posY;
             }
-
+            // on calcule la distance entre le batiment et la tour
             H2 = pow(A,2) + pow(B,2);
             H=sqrt(H2);
+            // si la tour est dans la portée du batiment
             if(H <= verifBat->portee)
             {
                 if(verifBat->type == RADAR)
                 {
+                    // on augmente la porte de 25%
                     result = (verifTower->portee*25)/100; 
                     verifTower->portee += result; 
-                    printf("coucou\n");
-                    printf(" result portee %d\n", verifTower->portee);
+                   
                 }
                 if(verifBat->type == USINE)
                 {
+                    // on augmente la puissance de 25%
                     result = (verifTower->puissance*25)/100; 
                     verifTower->puissance += result; 
-                    printf("coucou\n");
-                    printf(" result puissance %d\n", verifTower->puissance);
+                 
                 }
                 if(verifBat->type == MUNITIONS)
                 {
+                    // on augmente la cadence de 25%
                     result = (verifTower->cadence*25)/100;
                     verifTower->cadence += result; 
-                    printf("coucou\n");
-                    printf(" result cadence %d\n", verifTower->cadence);
+                   
                 }
                 
             }

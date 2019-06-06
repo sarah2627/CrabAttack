@@ -2,34 +2,29 @@
 
 tileType getColor(unsigned char r, unsigned char g, unsigned char b, Map map)
 {
+    // retourne le type en fonction de nos RGB données
     if(r == map.in.red && g == map.in.green && b == map.in.blue)
     {
-        //printf("type in\n");
         return in;
     }
     if(r == map.out.red && g == map.out.green && b == map.out.blue)
     {
-        //printf("type out\n");
         return out;
     }
      if(r == map.chemin.red && g == map.chemin.green && b == map.chemin.blue)
     {
-        //printf("type chemin\n");
         return chemin;
     }
     if(r == map.construct.red && g == map.construct.green && b == map.construct.blue)
     {
-        //printf("type construct\n");
         return construct;
     }
      if(r == map.noeud.red && g == map.noeud.green && b == map.noeud.blue)
     {
-        //printf("type noeud\n");
         return noeud;
     }
      if(r == map.sea.red && g == map.sea.green && b == map.sea.blue)
     {
-        //printf("type sea\n");
         return sea;
     }
     else 
@@ -41,6 +36,7 @@ tileType getColor(unsigned char r, unsigned char g, unsigned char b, Map map)
 
 void printType(tileType type)
 {
+    // affiche les types, utilisé lors des vérifications pour la construction de la carte
     switch (type)
     {
     case in :
@@ -75,9 +71,11 @@ void createTableau(Image image, int w, int h, Map map, Case tabCase[w][h])
         for(int j=15; j<image.width; j+=30)
         {
             Case newCase;
-            unsigned char r = image.data[((i*image.width + j)*3)];
+            // on reprend les données rgb de notre image d'après son tableau data
+            unsigned char r = image.data[((i*image.width + j)*3)]; 
             unsigned char g = image.data[((i*image.width + j)*3)+1];
             unsigned char b = image.data[((i*image.width + j)*3)+2];
+            // on cherche le type correspondant à la case
             newCase.type = getColor(r,g,b,map);
             newCase.x = positionX;
             newCase.y = positionY; 

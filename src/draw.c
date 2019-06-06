@@ -1,12 +1,8 @@
 #include "draw.h"
 
 static float aspectRatio;
-/* Espace fenetre virtuelle */
-static const float GL_VIEW_SIZE = 200.;
 /* Nombre de bits par pixel de la fenetre */
 static const unsigned int BIT_PER_PIXEL = 32;
-/* Subdivisions cercle */
-static const int CIRCLE_SUBDIVS = 2<<5;
 
 void reshape(SDL_Surface** surface, unsigned int width, unsigned int height)
 { 
@@ -98,17 +94,15 @@ GLuint Texture_Load(char* image_path,float texWidth, float texHeight){
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
-    /* Liberation de la memoire allouee sur le GPU pour la texture */
-    //glDeleteTextures(1, &texture_id);
-
     /* Liberation de la mémoire occupee par img */ 
     SDL_FreeSurface(image);
 
     return texture_id ;
 }
 
+// on dessine les éléments sur la map à partir d'une texture
 void drawMap(GLuint texture_id, float x , float y , float width, float height){
-    if (texture_id != NULL)
+    if (texture_id)
     {
         glEnable(GL_TEXTURE_2D);
         glBindTexture(GL_TEXTURE_2D, texture_id);
@@ -133,25 +127,16 @@ void drawMap(GLuint texture_id, float x , float y , float width, float height){
     {
         fprintf(stderr, "Erreur de texture\n");
     }
-    return 1;
-}
-
-//construction de la tour
-void constructMenu(){
-        GLuint texture_fond_guide = Texture_Load("./images/guide_du_jeu_fond.png", 630, 630);
-        GLuint texture_guide = Texture_Load("./images/guide_du_jeu_parchemin.png", 630, 630);
-        GLuint texture_bouton_quitter = Texture_Load("./images/bouton_quitter.png", 31, 31);
-        drawMap(texture_fond_guide, 0.5, 0.5, 1, 1);
-        drawMap(texture_guide, 0.5, 0.5, 1, 1);
-        drawMap(texture_bouton_quitter, 0.85, 0.85, 0.1, 0.1);
 }
 
 //afficher un texte
-void printText(void *text, char *info, float x, float y){
+void printText(void *text, char *info, float x, float y)
+{
+    const unsigned char* tmp = info;
     glPushMatrix();
         glColor3ub(28, 46, 79);
         glRasterPos2f(x, y);
-        glutBitmapString(text, info);
+        glutBitmapString(text, tmp);
     glPopMatrix();
     glColor3ub(255, 255, 255);
 }

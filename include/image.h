@@ -1,7 +1,7 @@
 #ifndef IMAGE_H__
 #define IMAGE_H__
 
-/// \brief structure that contains an image
+/// \brief structure image
 typedef struct Image{
   unsigned char *data;
   unsigned int width;
@@ -9,27 +9,27 @@ typedef struct Image{
 }Image;
 
 
-/// \brief allocate the memory for a new image
-/// \param image: pointer on the image.
-/// \param width: width of the required the image.
-/// \param widthheight: height of the required the image.
-/// \return EXIT_FAILURE in case of problem, else EXIT_SUCCESS.
+/// \brief alloue une nouvelle image en mémoire.
+/// \param image: pointeur sur image.
+/// \param width: largeur de l'image.
+/// \param height: hauteur de l'image.
+/// \return EXIT_FAILURE si problème sinon EXIT_SUCCESS.
 int newImage(Image *image, unsigned int width, unsigned int height);
 
-/// \brief release the image memory
-/// \param image: pointer on the image.
+/// \brief libère l'image en mémoire.
+/// \param image: pointeur sur image.
 void freeImage(Image *image);
 
-/// \brief save an image with PPM (P6) file format.
-/// \param image: pointer on the image to save.
-/// \param filename: char array containing the filename of the image to be saved.
-/// \return EXIT_FAILURE in case of problem, else EXIT_SUCCESS.
+/// \brief sauvegarde une image au format PPM P6.
+/// \param image: pointeur sur l'image à sauvegarder.
+/// \param filename: char chaine de caratère contenant le nom de l'image qu'on veut sauvegarder.
+/// \return EXIT_FAILURE si problème sinon EXIT_SUCCESS.
 int saveImagePPM(Image *image, char *filename);
 
-/// \brief load an image with PPM (P6) file format.
-/// \param image: pointer on the image to load.
+/// \brief charge une image au format PPM P6.
+/// \param image: pointeur sur l'image à charger.
 /// \param filename: char array containing the filename of the image to load.
-/// \return EXIT_FAILURE in case of problem, else EXIT_SUCCESS.
+/// \return EXIT_FAILURE  si problème sinon EXIT_SUCCESS.
 int loadImagePPM(Image *image, char *filename);
 
 #endif

@@ -2,6 +2,7 @@
 #include <GL/glu.h>
 #include <math.h> 
 #include <GL/glut.h>
+#include <SDL/SDL_mixer.h>
 
 #include "grid.h"
 #include "map.h"
@@ -10,6 +11,7 @@
 #include "monster.h"
 #include "construction.h"
 #include "jeu.h"
+
 
 /* Dimensions initiales et titre de la fenetre */
 static const unsigned int WINDOW_WIDTH = 630;
@@ -30,14 +32,13 @@ int main()
     jeu->gagne= 0;
     jeu->pause= 0;
 
+    //lecture du fichier ITD et construction de la map
     Map map;
     Image image; //l'image qu'on va parcourir
     map = loadMap("./data/map_day.itd", &image);
     char file[30] = "images/";
     strcat(file, map.carte);
-    //printMapNode(map);
     int chemin[map.nbNode];
-
     Node *final = getNode(1, map);
     
     //creer mon tableau, une grille de mon image
@@ -46,8 +47,7 @@ int main()
     Case tabCase[nbCaseW][nbCaseH];
     createTableau(image, nbCaseW, nbCaseH,map, tabCase);
 
-    GLuint texture_map;
-
+    //variable pour le changement de textures
     int chgtTexture = 0;
 
     //variable informations tours
@@ -71,20 +71,16 @@ int main()
     //Argent
     int argent = 1000;
     //chaine de caractere qui stocke l'argent convertit en chaine de caracteres
-   // char *noix_de_coco = " PAS ASSEZ DE NOIX DE COCO";
     char char_argent[10];
     char argent_restant[10];
 
     //Vagues
     char char_vagues[3];
-    char *textvagues = "VAGUES ";
     char *textvaguestotales = "/50";
     //chaine de caractere qui stocke l'argent convertit en chaine de caracteres
     char vagues_restantes[3];
 
-    TypeTower towertype = -1;
-    TypeConstruction constructiontype = -1;
-    int indexTower = 1;
+    GLuint texture_map;
 
     //Initialisation de la SDL
     if(-1 == SDL_Init(SDL_INIT_VIDEO)) 
@@ -95,7 +91,7 @@ int main()
         exit(EXIT_FAILURE);
     }
 
-    //Initialisation GLUT = necessaire ??
+    //Initialisation GLUT
     char *myargv[1];
     int myargc = 1;
     myargv[0] = strdup("test");
@@ -109,6 +105,7 @@ int main()
     SDL_WM_SetCaption(WINDOW_TITLE, NULL);
 
     char carte[] = "./images/map_day.png";
+    //glGenTextures(1, &texture_map);
     texture_map = Texture_Load(carte, 630, 630);
 
     //Menu du départ
@@ -120,8 +117,9 @@ int main()
     GLuint texture_fond_guide = Texture_Load("./images/guide_du_jeu_fond.png", 630, 630);
     GLuint texture_guide = Texture_Load("./images/guide_du_jeu_parchemin.png", 630, 630);
     GLuint texture_guide_du_jeu = Texture_Load("./images/guide_du_jeu.png", 631, 631);
+    GLuint texture_bouton_retour = Texture_Load("./images/retour_menu.png", 630, 631);
 
-    //Chargement de la texture du menu de jeu
+     //Chargement de la texture du menu de jeu
     GLuint texture_menu = Texture_Load("./images/menu_jeu.png", 630, 630);
 
     //Chargement de la texture quand le joueur perd
@@ -173,14 +171,18 @@ int main()
     int positionConstructionY = 0;
     int indexBat = 1;
 
-    cheminDijkstra(map, chemin);
-    printf("hellooooooooooooooooo\n");
-    printf("tableau 2 = %d\n", chemin[2]);
+    TypeTower towertype = -1;
+    TypeConstruction constructiontype = -1;
+    int indexTower = 1;
 
-     //Initialisation des variables pour les monstres
+    //on cherche le chemin le plus court
+    cheminDijkstra(map, chemin);
+
+    //Initialisation des variables pour les monstres
     Monster *listMonster = NULL;
     int indexBegin =0;
     int beginMonster = 0;
+    // on cherche notre node d'entrée dans notre tableau
     for(int i = 0; i<map.nbNode; i++)
     {
         if(chemin[i] == 0)
@@ -189,26 +191,26 @@ int main()
         }
     }
     indexBegin = beginMonster;
-    printf("begin index %d\n", indexBegin);
-    /*
-    Node * begin = getNode(chemin[indexBegin], map);
-    Monster *firstmonster = NULL;
-    int indexDirection = indexBegin - 1;
-    Node * direction = getNode(chemin[indexDirection], map);
-    */
-    Monster *firstmonster = NULL;
     int indexMonster = 1;
     TypeMonster monsterType;
     Node * begin = getNode(chemin[indexBegin], map);
     int indexDirection = indexBegin - 1;
     Node * direction = getNode(chemin[indexDirection], map);
-    //printf("position begin %f %f\n", begin->x, begin->y );
-    //printf("position direction %f %f\n", direction->x, direction->y );
 
     int movMonster = 0;
     int nbvagues = 1;
     int nbMonster = 0;
     int times = 0;
+
+    //Ajout du son
+        if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 1024) == -1) //Initialisation de l'API Mixer
+        {
+            printf("%s", Mix_GetError());
+        }
+        Mix_Music *musique; //Création du pointeur de type Mix_Music
+        musique = Mix_LoadMUS("./images/daft-punk-make-love-official-audio.mp3"); //Chargement de la musique
+        Mix_PlayMusic(musique, -1); //Jouer infiniment la musique
+
 
     /* Boucle principale */
     int loop = 1;
@@ -221,14 +223,17 @@ int main()
         /* Code de dessin */
         glClear(GL_COLOR_BUFFER_BIT);
 
+        // on est dans le menu
         if (chgtTexture == 0)
         {
             drawMap(texture_begin, 0.5, 0.5, 1, 1);
             drawMap(texture_bouton_lancer, 0.5, 0.5, 1, 1);
             drawMap(texture_bouton_guide, 0.5, 0.5, 1, 1);
 
+            // on réinitialise la map à nouveau (si on retourne dans le menu par exemple)
             listTower = NULL;
             listMonster = NULL;
+            listConstruction = NULL;
             createTableau(image, nbCaseW, nbCaseH,map, tabCase);
             argent = 1000;
             jeu->start = 0;
@@ -239,11 +244,15 @@ int main()
 
         }
 
+        // on est dans la page "but du jeu"
         if(chgtTexture == 1)
         {
-            constructMenu();
+            drawMap(texture_fond_guide, 0.5, 0.5, 1, 1);
+            drawMap(texture_guide, 0.5, 0.5, 1, 1);
+            drawMap(texture_bouton_retour, 0.5, 0.5, 1, 1);
         }
 
+        // on est dans la map, on lance la partie
         if(chgtTexture == 2)
         {
             //Dessin de la map
@@ -266,25 +275,31 @@ int main()
             if(jeu->aide == 1){
                 drawMap(texture_guide_du_jeu, 0.5, 0.5, 1, 1);
             }
+
+            // le joueur doit placer une tour pour enclencher le jeu et faire apparaitre les monstres
+            if( listTower != NULL || listConstruction != NULL)
+            {
+                jeu->start = 1;
+            }
             
             /********************************** TOUR ****************************************/
 
-            // après verification de la postion
+            // après verification de la position
             if(posTower != 0){
                 int tabX = positionTowerX/30;
                 int tabY = positionTowerY/30;
 
-                float mapX = positionTowerX/630.0;
-                float mapY = positionTowerY/630.0;
 
                 int coutTower =0;
                 coutTower = countTower(towertype);
 
+                // on vérifie qu'il n'y a pas déjà une tour ou un batiment ou qu'on est bien dans une zone constructible
                 if(tabCase[tabX][tabY].videTower == 0 && tabCase[tabX][tabY].videBat == 0 && tabCase[tabX][tabY].type == construct){
                    
                     
                     //verification de l'argent pour l'achat de la tour
                     if(argent >= coutTower){
+
                         tabCase[tabX][tabY].videTower = indexTower;
                         newTower = createTower(indexTower, positionTowerX, positionTowerY, towertype, &listTower);
                         argent = argent - newTower->cout;
@@ -295,10 +310,15 @@ int main()
                         posTower = 0;
                         indexTower++;
                     }
+                    constructiontype = -1;
+                    posTower = 0;    
                 }
             }
 
+            // on construit les tours de notre liste
             constructTower(&listTower);
+
+            // affiche les informations des tours en bas du menu
             if(nbinfo_tower_rocket == 1){
                 drawMap(texture_info_rocket, 0.50, 0.18, 0.25, 0.20);
             }
@@ -312,7 +332,7 @@ int main()
                 drawMap(texture_info_hybride, 0.80, 0.18, 0.25, 0.20);
             }
 
-            // sur la map
+            // affiche les informations des tours sur la map
             if(info_tower_rocket == 1){
                 drawMap(texture_info_rocket_map, positionRX/630.0, 1 - positionRY/630.0, 0.25, 0.18);
             }
@@ -326,7 +346,66 @@ int main()
                 drawMap(texture_info_hybride_map,positionRX/630.0, 1 - positionRY/630.0, 0.25, 0.18);
             }
 
-            //informations des tours sur la map
+            // On vérifie si un monstre est à proximité de la tour
+            Tower *verifTower = listTower;
+            while(verifTower != NULL)
+            {
+                Monster *verifMonster = listMonster;
+                while(verifMonster != NULL){
+                    double A = 0;
+                    double B = 0;
+                    double H2 = 0;
+                    double H = 0;
+                    if(verifTower->posX >= verifMonster->X){
+                        A = verifTower->posX - verifMonster->X;
+                    }
+                    if(verifTower->posX < verifMonster->X){
+                        A = verifMonster->X - verifTower->posX;
+                    }
+                    if(verifTower->posY >= verifMonster->Y){
+                        B = verifTower->posY - verifMonster->Y;
+                    }
+                     if(verifTower->posY < verifMonster->Y){
+                        B = verifMonster->Y - verifTower->posY;
+                    }
+                    // on calcule la distance entre notre tour et notre monstre
+                    H2 = pow(A,2) + pow(B,2);
+                    H=sqrt(H2);
+                    // on vérifie si la tour peut tirer en fonction de sa cadence
+                    if(times%verifTower->cadence == 0)
+                    {
+                        // si la distance est plus petite que la portée de notre tour on tire
+                        if(H <= verifTower->portee){
+                        float lineTX = verifTower->posX/630.0;
+                        float lineTY = 1-verifTower->posY/630.0;
+                        float lineMX = verifMonster->X/630.0;
+                        float lineMY = 1-verifMonster->Y/630.0;
+                        glLineWidth(4);
+                        glBegin(GL_LINES);
+                            glColor3ub(255,0,0);
+                            glVertex2f( lineTX , lineTY);
+                            glVertex2f(lineMX , lineMY);
+                            glColor3ub(255, 255, 255);
+                        glEnd();
+                        verifMonster->pdv -= verifTower->puissance; 
+
+                            // si le monstre n'a plus de point de vie
+                            if(verifMonster->pdv == 0 || verifMonster->pdv < 0)
+                            {
+                                argent = argent + (verifMonster->gain*nbvagues);
+                                sprintf(char_argent, "%d\n", argent);
+                                sprintf(argent_restant, "%s", char_argent);
+                                listMonster =  deleteMonster(verifMonster, listMonster);
+                            }
+                        }
+                    }
+                    
+                verifMonster = verifMonster->next;
+                }
+                verifTower = verifTower->nextTower;
+            }
+
+            //récupère les informations des tours sur la map en fonction de la position de la souris
             if(tabCase[positionRX/30][positionRY/30].videTower != 0)
             {
                 Tower * findTower = getTower(tabCase[positionRX/30][positionRY/30].videTower, listTower );
@@ -371,64 +450,10 @@ int main()
                 info_tower_hybride = 0;
             }
 
-            Tower *verifTower = listTower;
-            while(verifTower != NULL)
-            {
-                Monster *verifMonster = listMonster;
-                while(verifMonster != NULL){
-                    double A = 0;
-                    double B = 0;
-                    double H2 = 0;
-                    double H = 0;
-                    if(verifTower->posX >= verifMonster->X){
-                        A = verifTower->posX - verifMonster->X;
-                    }
-                    if(verifTower->posX < verifMonster->X){
-                        A = verifMonster->X - verifTower->posX;
-                    }
-                    if(verifTower->posY >= verifMonster->Y){
-                        B = verifTower->posY - verifMonster->Y;
-                    }
-                     if(verifTower->posY < verifMonster->Y){
-                        B = verifMonster->Y - verifTower->posY;
-                    }
-                    
-                    H2 = pow(A,2) + pow(B,2);
-                    H=sqrt(H2);
-                    if(times%verifTower->cadence == 0)
-                    {
-                        if(H <= verifTower->portee){
-                        float lineTX = verifTower->posX/630.0;
-                        float lineTY = 1-verifTower->posY/630.0;
-                        float lineMX = verifMonster->X/630.0;
-                        float lineMY = 1-verifMonster->Y/630.0;
-                        glLineWidth(4);
-                        glBegin(GL_LINES);
-                            glColor3ub(255,0,0);
-                            glVertex2f( lineTX , lineTY);
-                            glVertex2f(lineMX , lineMY);
-                            glColor3ub(255, 255, 255);
-                        glEnd();
-                        verifMonster->pdv -= verifTower->puissance; 
-                        if(verifMonster->pdv == 0 || verifMonster->pdv < 0)
-                        {
-                            argent = argent + (verifMonster->gain*nbvagues);
-                            sprintf(char_argent, "%d\n", argent);
-                            sprintf(argent_restant, "%s", char_argent);
-                            listMonster =  deleteMonster(verifMonster, listMonster);
-                        }
-                        }
-                    }
-                    
-                verifMonster = verifMonster->next;
-            
-                }
-                verifTower = verifTower->nextTower;
-                
-            }
-
+            // si on veut supprimer une tour
             if(supprTower == 1)
             {
+                // on vérifie que la case est bien occupée par une tour
                 if(tabCase[positionX/30][positionY/30].videTower != 0)
                 {
                     int indexSuppr = tabCase[positionX/30][positionY/30].videTower;
@@ -443,9 +468,10 @@ int main()
             }
 
             /********************************** MONSTRE ****************************************/
+            // si le jeu commence et n'est pas en pause
             if(jeu->start == 1 && jeu->pause%2 == 0){
 
-                
+                // on crée une liste de 10 monstres par vague
                 if(times%80 == 0 && nbMonster <= 9){
                     
                     monsterType = chooseMonster(nbvagues);
@@ -453,25 +479,26 @@ int main()
                     indexDirection = indexBegin - 1;
                     begin = getNode(chemin[indexBegin], map);
                     direction = getNode(chemin[indexDirection], map);
-                    firstmonster = createMonster(nbvagues,indexMonster, indexDirection, monsterType, direction, begin->x, begin->y, &listMonster);
+                    Monster *firstmonster = createMonster(nbvagues,indexMonster, indexDirection, monsterType, direction, begin->x, begin->y, &listMonster);
                     indexMonster++;
                     nbMonster++;
-                    //printf("getMOnster = %d\n", getMonster(indexMonster,listMonster)->indexMonster);
+                  
                 }
+                // on crée une nouvelle vague
                 else if(times%600 == 0 && nbMonster == 10)
                 {
-                     //1000 millisecondes = 1 seconde ; faire pause :
+                     //1000 millisecondes = 1 seconde ; 
                     
                         if(listMonster == NULL)
                         {
-                            printf("on est là %d\n", times);
                             nbMonster = 0;
                             nbvagues ++;
                         }
-                   
                 }
 
+                // on affiche nos monstres sur la map
                 constructMonster(&listMonster);
+                // on déplace le monstre
                 Monster *mov = listMonster;
                 if(movMonster == 0){
                     while (mov != NULL){
@@ -505,6 +532,7 @@ int main()
                             }
                             if(monsterX == directionX && monsterY == directionY)
                             {
+                                // si il a atteint sa destination, on change son noeud direction
                                 mov->indexBegin -= 1;
                                 if(mov->indexBegin > 0)
                                 {
@@ -524,7 +552,8 @@ int main()
                         }
                         if(mov->direction == NULL)
                         {
-                            printf("perdu\n");
+                            // le monstre est arrivé à la sortie
+                            //printf("perdu\n");
                             movMonster = 1;
                             jeu->perdu = 3;
                         }
@@ -532,17 +561,16 @@ int main()
                     }
                 }
 
-                 times++; 
+                times++; 
 
+                // si on a vaincu tous les monstres des 50 vagues, on gagne la partie
                  if(nbvagues == 50 && listMonster == NULL)
                 {
-                    jeu->gagne = 1;
+                    jeu->gagne = 4;
                     chgtTexture = 4;
                     jeu->start = 0;
                 }
             }
-
-            
 
             /********************************** BATIMENTS ****************************************/
 
@@ -557,6 +585,7 @@ int main()
                 int coutConstruction = 0;
                 coutConstruction = countConstruction(constructiontype);
 
+                // on vérifie qu'il n'y a pas de batiment, de tour et que l'emplacement est constructible
                 if(tabCase[tabX][tabY].videBat == 0 && tabCase[tabX][tabY].videTower == 0 && tabCase[tabX][tabY].type == construct){
                     
 
@@ -574,8 +603,10 @@ int main()
                     posConstruction = 0;
                 }
             }
+            // on affiche la liste de nos batiments sur notre map
             constructConstruction(&listConstruction);
 
+            // affiche les informations en bas du menu
             if(nbinfo_construction_radar == 1){
                 drawMap(texture_info_radar, 0.23, 0.18, 0.25, 0.20);
             }
@@ -586,9 +617,18 @@ int main()
                 drawMap(texture_info_munitions, 0.38, 0.18, 0.25, 0.20);
             }
 
-            // Portée des bâtiments
+            // affiche les informations sur la map
+            if(info_construction_radar == 1){
+                drawMap(texture_info_radar_map, positionRX/630.0, 1 - positionRY/630.0, 0.25, 0.18);
+            }
+            if(info_construction_usine == 1){
+                drawMap(texture_info_usine_map, positionRX/630.0, 1 - positionRY/630.0, 0.25, 0.18);
+            }
+            if(info_construction_munitions == 1){
+                drawMap(texture_info_munitions_map, positionRX/630.0, 1 - positionRY/630.0, 0.25, 0.18);
+            }
             
-            //informations des tours sur la map
+            // on récupère les informations des batiments sur la map
             if(tabCase[positionRX/30][positionRY/30].videBat != 0)
             {
                 Construction * findConstruction = getConstruction(tabCase[positionRX/30][positionRY/30].videBat, listConstruction);
@@ -624,16 +664,7 @@ int main()
                 info_construction_munitions = 0;
             }
 
-            // sur la map
-            if(info_construction_radar == 1){
-                drawMap(texture_info_radar_map, positionRX/630.0, 1 - positionRY/630.0, 0.25, 0.18);
-            }
-            if(info_construction_usine == 1){
-                drawMap(texture_info_usine_map, positionRX/630.0, 1 - positionRY/630.0, 0.25, 0.18);
-            }
-            if(info_construction_munitions == 1){
-                drawMap(texture_info_munitions_map, positionRX/630.0, 1 - positionRY/630.0, 0.25, 0.18);
-            }
+            
         }
 
         // si on perd
@@ -757,6 +788,7 @@ int main()
                             if(positionX > 590 && positionX < 620 && positionY > 6 && positionY < 36){
                                 chgtTexture = 0;
                                 jeu->perdu = 0;
+                                jeu->gagne = 0;
                                 printf("Quitter partie, retour menu \n");
                             }
 
@@ -813,11 +845,6 @@ int main()
                         case SDLK_m:
                         chgtTexture = 0;
                         break;
-
-                        case SDLK_r:
-                        jeu->start = 1;
-                        break;
-
                         case SDLK_s:
                         chgtTexture = 2;
                         break;
@@ -840,13 +867,14 @@ int main()
         }
        
         elapsedTime = SDL_GetTicks() - startTime;
+       
     }
-
-    //Liberation de la mémoire occupee par background
-    //SDL_FreeSurface(background_map);
 
     //Liberation de la memoire allouee sur le GPU pour la texture
     glDeleteTextures(1, &texture_map);
+
+    Mix_FreeMusic(musique); //Libération de la musique
+    Mix_CloseAudio(); //Fermeture de l'API
 
     //Liberation de la mémoire occupee par img
     SDL_FreeSurface(surface);
@@ -854,7 +882,7 @@ int main()
     //Liberation des ressources associees a la SDL
     SDL_Quit();
     freeImage(&image);
+
     return EXIT_SUCCESS;
    
-    //return 0;
 }

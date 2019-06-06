@@ -126,6 +126,7 @@ void constructTower(Tower** list){
     }
 }
 
+// on renvoie le cout en fonction du type
 int countTower(TypeTower type){
     int cout;
     if(type == ROCKET)
@@ -147,6 +148,7 @@ int countTower(TypeTower type){
     return cout;
 }
 
+// on cherche une tour
 Tower * getTower(int index, Tower * listTower){
     if(listTower == NULL){
         fprintf(stderr, "erreur liste nulle\n");
@@ -165,7 +167,7 @@ Tower * getTower(int index, Tower * listTower){
     }
 }
 
-
+// on supprime une tour dans notre liste
 Tower * deleteTower(Tower *tower, Tower *listTower)
 {
     Tower * deleteT = getTower(tower->index, listTower);

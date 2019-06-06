@@ -1,7 +1,7 @@
 #include "node.h"
 #define MAX_TAILLE 20
 
-
+// création d'un noeud
 Node* createNode(int x, int y, int type, int index, Node** lstnode) {
 	Node* node = (Node*)malloc(sizeof(Node));
 	if(node == NULL) {
@@ -33,10 +33,10 @@ Node* createNode(int x, int y, int type, int index, Node** lstnode) {
 }
 
 
-
+// ajout liste successeur
 void addSuccessors(int value, AdjacenceList *list)
 {
-    //printf("hello\n");
+ 
     AdjacentNode* new = (AdjacentNode *)malloc(sizeof(AdjacentNode));
 
     if(!new) {
@@ -53,14 +53,11 @@ void addSuccessors(int value, AdjacenceList *list)
     }
     else{
         while (temp->next != NULL) {
-            //printf("yo\n");
-   
+  
             temp = temp->next;
-           
-            //printf("momo\n");
+       
         }
-   
-        //printf("alors?\n");
+
         temp->next = new;
     }
 
