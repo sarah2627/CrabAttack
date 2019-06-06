@@ -105,6 +105,8 @@ void constructMonster(Monster ** list)
 		drawMap(monster_texture, X, Y, 0.05, 0.05);
 		tmp = tmp->next;
 	}
+
+	glDeleteTextures(1,&monster_texture);
 }
 
 // définit le type du monstre en fonction de la vague

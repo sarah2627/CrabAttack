@@ -57,7 +57,7 @@ Tower* createTower(int index,float x, float y, TypeTower type, Tower ** list)
         default:
             break;
     }
-    printf("Tour créé yeaaaaaah\n");
+ 
    return newTower; 
 }
 

@@ -770,12 +770,12 @@ int main()
 
                 //test clic droit et clic gauche
                 case SDL_MOUSEBUTTONUP:
-                    printf("clic en (%d, %d)\n", e.button.x, e.button.y);
+                    //printf("clic en (%d, %d)\n", e.button.x, e.button.y);
 
                     switch(e.button.button) 
                     {
                         case SDL_BUTTON_LEFT:
-                            printf("clic en (%d, %d)\n", e.button.x, e.button.y);
+                            //printf("clic en (%d, %d)\n", e.button.x, e.button.y);
                             positionX = e.button.x;
                             positionY = e.button.y;
 
@@ -789,7 +789,7 @@ int main()
                                 chgtTexture = 0;
                                 jeu->perdu = 0;
                                 jeu->gagne = 0;
-                                printf("Quitter partie, retour menu \n");
+                               // printf("Quitter partie, retour menu \n");
                             }
 
                             //clique sur le bouton pour supprimer une tour
@@ -823,7 +823,6 @@ int main()
                         break;
                     
                         case SDL_BUTTON_RIGHT:
-                            printf("test clic droit ok\n");
                             positionRX = e.button.x;
                             positionRY = e.button.y;
                         break;
@@ -873,16 +872,49 @@ int main()
     //Liberation de la memoire allouee sur le GPU pour la texture
     glDeleteTextures(1, &texture_map);
 
+    glDeleteTextures(1,&texture_begin);
+    glDeleteTextures(1,&texture_bouton_lancer);
+    glDeleteTextures(1,&texture_bouton_guide);
+
+    glDeleteTextures(1,&texture_fond_guide);
+    glDeleteTextures(1,&texture_guide);
+    glDeleteTextures(1,&texture_guide_du_jeu);
+    glDeleteTextures(1,&texture_bouton_retour);
+
+    glDeleteTextures(1,&texture_menu);
+
+    glDeleteTextures(1,&texture_win);
+
+    glDeleteTextures(1,&texture_gameover);
+
+    glDeleteTextures(1,&texture_info_rocket);
+    glDeleteTextures(1,&texture_info_laser);
+    glDeleteTextures(1,&texture_info_mitraillette);
+    glDeleteTextures(1,&texture_info_hybride);
+
+    glDeleteTextures(1,&texture_info_rocket_map);
+    glDeleteTextures(1,&texture_info_laser_map);
+    glDeleteTextures(1,&texture_info_mitraillette_map);
+    glDeleteTextures(1,&texture_info_hybride_map);
+
+    glDeleteTextures(1,&texture_info_radar);
+    glDeleteTextures(1,&texture_info_usine);
+    glDeleteTextures(1,&texture_info_munitions);
+
+    glDeleteTextures(1,&texture_info_radar_map);
+    glDeleteTextures(1,&texture_info_usine_map);
+    glDeleteTextures(1,&texture_info_munitions_map);
+
     Mix_FreeMusic(musique); //Libération de la musique
     Mix_CloseAudio(); //Fermeture de l'API
 
     //Liberation de la mémoire occupee par img
     SDL_FreeSurface(surface);
-
+    //FreeTexture(texture_begin);
     //Liberation des ressources associees a la SDL
     SDL_Quit();
     freeImage(&image);
-
+    free(jeu);
     return EXIT_SUCCESS;
    
 }
