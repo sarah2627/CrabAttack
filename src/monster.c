@@ -115,7 +115,7 @@ TypeMonster chooseMonster(int vague)
 	{
 		type = MASSACREUR;
 	}
-	if( vague%2 == 0)
+	else if( vague%2 == 0)
 	{
 		type = BLEU;
 	}
