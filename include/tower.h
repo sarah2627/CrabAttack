@@ -37,6 +37,7 @@ void constructTower(Tower** list);
 TypeTower choixTower(int clickX, int clickY);
 int countTower(TypeTower type);
 Tower *getTower(int index, Tower *listTower);
+Tower * deleteTower(Tower *tower, Tower *listTower);
 
 
 #endif

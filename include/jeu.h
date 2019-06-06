@@ -8,7 +8,7 @@ typedef struct jeu
 	int perdu;
 	int pause;
 	int aide;
-	int regle;
+	int guide;
 }Jeu;
 
 

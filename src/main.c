@@ -29,7 +29,6 @@ int main()
     jeu->perdu= 0;
     jeu->gagne= 0;
     jeu->pause= 0;
-    jeu->regle= 0;
 
     Map map;
     Image image; //l'image qu'on va parcourir
@@ -47,7 +46,6 @@ int main()
     Case tabCase[nbCaseW][nbCaseH];
     createTableau(image, nbCaseW, nbCaseH,map, tabCase);
 
-    ///////// Partie SDL ////////////
     GLuint texture_map;
 
     int chgtTexture = 0;
@@ -70,15 +68,19 @@ int main()
     int info_construction_usine = 0;
     int info_construction_munitions = 0;
 
-    //variable pour le guide du jeu
-    int guide_du_jeu = 0;
-
     //Argent
     int argent = 1000;
     //chaine de caractere qui stocke l'argent convertit en chaine de caracteres
-    char *noix_de_coco = " PAS ASSEZ DE NOIX DE COCO";
+   // char *noix_de_coco = " PAS ASSEZ DE NOIX DE COCO";
     char char_argent[10];
     char argent_restant[10];
+
+    //Vagues
+    char char_vagues[3];
+    char *textvagues = "VAGUES ";
+    char *textvaguestotales = "/50";
+    //chaine de caractere qui stocke l'argent convertit en chaine de caracteres
+    char vagues_restantes[3];
 
     TypeTower towertype = -1;
     TypeConstruction constructiontype = -1;
@@ -117,8 +119,7 @@ int main()
     //Guide du jeu
     GLuint texture_fond_guide = Texture_Load("./images/guide_du_jeu_fond.png", 630, 630);
     GLuint texture_guide = Texture_Load("./images/guide_du_jeu_parchemin.png", 630, 630);
-    GLuint texture_bouton_quitter = Texture_Load("./images/bouton_quitter.png", 31, 31);
-    GLuint texture_guide_du_jeu = Texture_Load("./images/guide_du_jeu.png", 630, 630);
+    GLuint texture_guide_du_jeu = Texture_Load("./images/guide_du_jeu.png", 631, 631);
 
     //Chargement de la texture du menu de jeu
     GLuint texture_menu = Texture_Load("./images/menu_jeu.png", 630, 630);
@@ -156,14 +157,15 @@ int main()
     int positionRX = 0;
     int positionRY = 0;
 
-    //Create Tower
+    //Initialisation des variables pour les tours
     Tower *listTower = NULL;
     Tower *newTower = NULL;
     int posTower = 0;
     int positionTowerX = 0;
     int positionTowerY = 0;
+    int supprTower = 0;
 
-    //Create Construction
+     //Initialisation des variables pour les batiments
     Construction *listConstruction = NULL;
     Construction *newConstruction = NULL;
     int posConstruction = 0;
@@ -175,7 +177,7 @@ int main()
     printf("hellooooooooooooooooo\n");
     printf("tableau 2 = %d\n", chemin[2]);
 
-    //Create Monster
+     //Initialisation des variables pour les monstres
     Monster *listMonster = NULL;
     int indexBegin =0;
     int beginMonster = 0;
@@ -230,6 +232,11 @@ int main()
             createTableau(image, nbCaseW, nbCaseH,map, tabCase);
             argent = 1000;
             jeu->start = 0;
+            movMonster = 0;
+            nbvagues = 1;
+            nbMonster = 0;
+            times = 0;
+
         }
 
         if(chgtTexture == 1)
@@ -248,9 +255,15 @@ int main()
             //Affichage de l'argent restant
             sprintf(char_argent, "%d", argent);
             sprintf(argent_restant, "%s", char_argent);
-            printText(GLUT_BITMAP_HELVETICA_18, argent_restant, 0.12, 0.135);
+            printText(GLUT_BITMAP_HELVETICA_18, argent_restant, 0.17, 0.115);
 
-            if(guide_du_jeu == 1){
+            //Affichage du nombre de vagues
+            sprintf(char_vagues, "%d", nbvagues);
+            sprintf(vagues_restantes, "%s%s", char_vagues, textvaguestotales);
+            printText(GLUT_BITMAP_HELVETICA_18, vagues_restantes, 0.5, 0.96);
+
+            //Affichage du guide du jeu
+            if(jeu->aide == 1){
                 drawMap(texture_guide_du_jeu, 0.5, 0.5, 1, 1);
             }
             
@@ -283,11 +296,6 @@ int main()
                         indexTower++;
                     }
                 }
-                /*
-                else
-                {
-                    printf("Can not construct tower here\n");
-                }*/
             }
 
             constructTower(&listTower);
@@ -306,16 +314,16 @@ int main()
 
             // sur la map
             if(info_tower_rocket == 1){
-                drawMap(texture_info_rocket_map, positionRX/630.0, positionRY/630.0, 0.25, 0.18);
+                drawMap(texture_info_rocket_map, positionRX/630.0, 1 - positionRY/630.0, 0.25, 0.18);
             }
             if(info_tower_laser == 1){
-                drawMap(texture_info_laser_map, positionRX/630.0, positionRY/630.0, 0.25, 0.18);
+                drawMap(texture_info_laser_map, positionRX/630.0, 1 - positionRY/630.0, 0.25, 0.18);
             }
             if(info_tower_mitraillette == 1){
-                drawMap(texture_info_mitraillette_map, positionRX/630.0, positionRY/630.0, 0.25, 0.18);
+                drawMap(texture_info_mitraillette_map, positionRX/630.0, 1 - positionRY/630.0, 0.25, 0.18);
             }
             if(info_tower_hybride == 1){
-                drawMap(texture_info_hybride_map,positionRX/630.0, positionRY/630.0, 0.25, 0.18);
+                drawMap(texture_info_hybride_map,positionRX/630.0, 1 - positionRY/630.0, 0.25, 0.18);
             }
 
             Tower *verifTower = listTower;
@@ -342,14 +350,20 @@ int main()
                     
                     H2 = pow(A,2) + pow(B,2);
                     H=sqrt(H2);
-                    //printf("A = %lf B= %lf hauteur = %lf\n", A, B, H );
-                    //H = sqrt(pow(A,2) + pow(B,2));
-                    //H = 20;
                     if(times%verifTower->cadence == 0)
                     {
                         if(H <= verifTower->portee){
-                        //printf("pdv = %d\n", verifMonster->pdv );
-                        //printf("KILLLL\n");
+                        float lineTX = verifTower->posX/630.0;
+                        float lineTY = 1-verifTower->posY/630.0;
+                        float lineMX = verifMonster->X/630.0;
+                        float lineMY = 1-verifMonster->Y/630.0;
+                        glLineWidth(4);
+                        glBegin(GL_LINES);
+                            glColor3ub(255,0,0);
+                            glVertex2f( lineTX , lineTY);
+                            glVertex2f(lineMX , lineMY);
+                            glColor3ub(255, 255, 255);
+                        glEnd();
                         verifMonster->pdv -= verifTower->puissance; 
                         //printf("pdv = %d\n", verifMonster->pdv );
                         if(verifMonster->pdv == 0 || verifMonster->pdv < 0)
@@ -369,11 +383,22 @@ int main()
                 //printf("KILLLL3\n");
             }
 
+            if(supprTower == 1)
+            {
+                if(tabCase[positionX/30][positionY/30].videTower != 0)
+                {
+                    int indexSuppr = tabCase[positionX/30][positionY/30].videTower;
+                    Tower * TowerSupp = getTower(indexSuppr, listTower);
+                    listTower = deleteTower(TowerSupp, listTower);
+                    supprTower = 0;
+                }
+            }
+
             /********************************** MONSTRE ****************************************/
             if(jeu->start == 1 && jeu->pause%2 == 0){
 
                 
-                if(times%80 == 0 && nbMonster <= 4){
+                if(times%80 == 0 && nbMonster <= 9){
                     
                     monsterType = chooseMonster(nbvagues);
                     indexBegin = beginMonster;
@@ -385,7 +410,7 @@ int main()
                     nbMonster++;
                     //printf("getMOnster = %d\n", getMonster(indexMonster,listMonster)->indexMonster);
                 }
-                else if(times%600 == 0 && nbMonster == 5)
+                else if(times%600 == 0 && nbMonster == 10)
                 {
                      //1000 millisecondes = 1 seconde ; faire pause :
                     
@@ -453,13 +478,20 @@ int main()
                         {
                             printf("perdu\n");
                             movMonster = 1;
-                            chgtTexture = 3;
+                            jeu->perdu = 3;
                         }
                         mov = mov->next;
                     }
                 }
 
                  times++; 
+
+                 if(nbvagues == 50 && listMonster == NULL)
+                {
+                    jeu->gagne = 1;
+                    chgtTexture = 4;
+                    jeu->start = 0;
+                }
             }
 
             //informations des tours sur la map
@@ -536,10 +568,6 @@ int main()
                     constructiontype = -1;
                     posConstruction = 0;
                 }
-                /*
-                else{
-                    printf("Can not construct batiments here\n");
-                }*/
             }
             constructConstruction(&listConstruction);
 
@@ -593,26 +621,26 @@ int main()
 
             // sur la map
             if(info_construction_radar == 1){
-                drawMap(texture_info_radar_map, positionRX/630.0, positionRY/630.0, 0.25, 0.18);
+                drawMap(texture_info_radar_map, positionRX/630.0, 1 - positionRY/630.0, 0.25, 0.18);
             }
             if(info_construction_usine == 1){
-                drawMap(texture_info_usine_map, positionRX/630.0, positionRY/630.0, 0.25, 0.18);
+                drawMap(texture_info_usine_map, positionRX/630.0, 1 - positionRY/630.0, 0.25, 0.18);
             }
             if(info_construction_munitions == 1){
-                drawMap(texture_info_munitions_map, positionRX/630.0, positionRY/630.0, 0.25, 0.18);
+                drawMap(texture_info_munitions_map, positionRX/630.0, 1 - positionRY/630.0, 0.25, 0.18);
             }
         }
 
-        // if you lose
-        if(chgtTexture == 3)
+        // si on perd
+        if(jeu-> perdu == 3)
         {
             drawMap(texture_gameover, 0.5, 0.5, 1, 1);
         }
 
-        // if you win
-        if(chgtTexture == 4)
+        // si on gagne
+        if(jeu->gagne == 4)
         {
-            //drawMap(texture_win, 0.5, 0.5, 1, 1);
+            drawMap(texture_win, 0.5, 0.5, 1, 1);
         }
 
         /* Echange du front et du back buffer : mise a jour de la fenetre */
@@ -622,13 +650,6 @@ int main()
         SDL_Event e;
         while(SDL_PollEvent(&e)) 
         {
-            /* L'utilisateur ferme la fenetre : */
-            if(e.type == SDL_QUIT) 
-            {
-                loop = 0;
-                break;
-            }
-
             /* L'utilisateur ferme la fenetre : */
             if(e.type == SDL_QUIT) 
             {
@@ -700,6 +721,15 @@ int main()
                     else{
                         nbinfo_tower_hybride = 0;
                     }
+
+                    //passe sa souris sur le bouton pour afficher le guide du jeu
+                    if(positionRX > 511 && positionRX < 540 && positionRY > 6 && positionRY < 36){
+                        jeu->aide = 1;
+                    }
+                    else
+                    {
+                        jeu->aide = 0;
+                    }
                     break;
 
                 //test clic droit et clic gauche
@@ -713,16 +743,21 @@ int main()
                             positionX = e.button.x;
                             positionY = e.button.y;
 
-                            if(positionX > 511 && positionX < 540 && positionY > 6 && positionY < 36){
-                                guide_du_jeu;
-                            }
-
+                            //clique sur le bouton pour mettre le jeu en pause
                             if(positionX > 550 && positionX < 580 && positionY > 6 && positionY < 36){
                                 jeu->pause ++;
                             }
 
+                             //clique sur le bouton pour quitter la partie et revenir au menu principal
                             if(positionX > 590 && positionX < 620 && positionY > 6 && positionY < 36){
                                 chgtTexture = 0;
+                                jeu->perdu = 0;
+                                printf("Quitter partie, retour menu \n");
+                            }
+
+                            //clique sur le bouton pour supprimer une tour
+                            if(positionX > 0 && positionX < 152 && positionY > 583 && positionY < 619){
+                                supprTower = 1;
                             }
 
                             //choix du type de la tour

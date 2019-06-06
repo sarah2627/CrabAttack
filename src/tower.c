@@ -166,3 +166,50 @@ Tower * getTower(int index, Tower * listTower){
 }
 
 
+Tower * deleteTower(Tower *tower, Tower *listTower)
+{
+    Tower * deleteT = getTower(tower->index, listTower);
+    Tower *list = listTower;
+    if(listTower == NULL)
+    {
+        fprintf(stderr, "Erreur liste NULL\n");
+        exit(1);
+    }
+    if(listTower == tower)
+    {
+        deleteT = listTower;
+        if(listTower->nextTower != NULL)
+        {
+            listTower = listTower->nextTower;
+            free(deleteT);
+            return listTower;
+        }
+        else
+        {
+            free(deleteT);
+            return NULL;
+        }
+    }
+    while(listTower->nextTower != NULL)
+    {
+        if(listTower->nextTower == tower)
+        {
+            deleteT = listTower->nextTower;
+            if(deleteT->nextTower != NULL)
+            {
+                listTower->nextTower = deleteT->nextTower;
+            }
+            else
+            {
+                listTower->nextTower = NULL;
+                break;
+            }
+            free(deleteT);
+        }
+    
+        listTower = listTower->nextTower;
+    }
+        
+    return list;
+}
+

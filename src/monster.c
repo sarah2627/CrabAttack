@@ -107,11 +107,11 @@ TypeMonster chooseMonster(int vague)
 {
 	TypeMonster type;
 	int choix = vague;
-	if( vague > 5)
+	if( vague%5 == 0)
 	{
 		type = MASSACREUR;
 	}
-	if( vague >= 2 && vague <=5)
+	if( vague%2 == 0)
 	{
 		type = BLEU;
 	}
@@ -119,23 +119,6 @@ TypeMonster chooseMonster(int vague)
 	{
 		type = ROUGE;
 	}
-	/*
-	switch (vague)
-	{
-	case 1:
-		type = ROUGE;
-		break;
-	case 2:
-		type = BLEU;
-		break;
-	case 3:
-		type = MASSACREUR;
-		break;
-	
-	default:
-		break;
-	}
-	*/
 	return type;
 }
 
