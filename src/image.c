@@ -6,14 +6,14 @@
 
 int newImage(Image *image, unsigned int width, unsigned int height)
 {
-  // memory allocation
+  // allocation mémoire
   image->data = (unsigned char*) malloc(sizeof(unsigned char) * 3 * width * height);
   if(image->data == NULL){
     printf("newImage : error bad memory allocation.\n");
     return EXIT_FAILURE;
   }
 
-  // update widt and heigh
+  // définit largeur et hauteur
   image->width  = width;
   image->height = height;
 
@@ -39,22 +39,22 @@ void freeImage(Image *image)
 
 int saveImagePPM(Image *image, char *filename)
 {
-  // open the file
+  // ouvre le fichier
   FILE *myfile;
   myfile = fopen(filename,"wt");
 
-  // save the data
+  // sauvegarde les données
   if (myfile)
   {
-    // generate the header
-    char header[100]; // bad way to proceed, but still ok ...
+    // génère l'entete
+    char header[100]; 
     sprintf(header,"P6\n\n%d %d\n255\n",image->width,image->height);
     fprintf(myfile,"%s",header);
 
-    // write the data
+    // écrit les données
     fwrite(image->data,sizeof(unsigned char),image->width*image->height*3,myfile);
 
-    // close the file
+    // fermer le fichier
     fclose(myfile);
   }
   else
@@ -68,44 +68,44 @@ int saveImagePPM(Image *image, char *filename)
 
 
 
-// reads only P6
+// lire que les P6
 int loadImagePPM(Image *image, char *filename)
 {
   FILE *myFile = NULL;
   char chaine[255];
   unsigned int width,height;
 
-  // open the file
+  // ouvre le fichier
   if (!(myFile = fopen(filename, "rt")))
     {
       printf("loadImagePPM : error opening file %s.\n",filename);
       return EXIT_FAILURE;
     }
 
-  // read header
+  // lit l'entete
   fscanf(myFile,"%s\n",chaine);
 
-  // read comments ...
+  // lit les commentaires
   do{ 
     fgets(chaine,255,myFile);
   } while (chaine[0]=='#');
   
-  // read width and height
+  // lit la largeur et la longueur
   sscanf(chaine,"%d %d",&width,&height);
 
-  // read the "255"
+  // lit le "255"
   fscanf(myFile,"%s\n",chaine);
 
-  // memory allocation
+  // allocation mémoire
   if(newImage(image,width,height) == EXIT_FAILURE){
     printf("loadImagePPM : memory allocation error\n");
     return EXIT_FAILURE;
   }
 
-  // read the data
+  // lit les données
   fread(image->data, sizeof (unsigned char), width*height * 3, myFile);
 
-  // close the file
+  // ferme le fichier
   fclose(myFile);
 
   return EXIT_SUCCESS;

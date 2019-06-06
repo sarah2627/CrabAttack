@@ -1,6 +1,6 @@
 CC = gcc
 CFLAGS = -Wall
-LDFLAGS = -lSDL -lGLU -lGL -lm -lSDL_image -lglut
+LDFLAGS = -lSDL -lGLU -lGL -lm -lSDL_image -lglut -lSDL_mixer
 
 APP_BIN = itd
 
@@ -8,7 +8,7 @@ SRC_PATH = src
 OBJ_PATH = obj
 INC_PATH = -I include
 BIN_PATH = bin
-LIB_PATH = lib -lSDL -lgLut -lGLU -lGL -lm -lSDL_image
+LIB_PATH = lib -lSDL -lgLut -lGLU -lGL -lm -lSDL_image -lSDL_mixer
 SRC_FILES = $(shell find $(SRC_PATH) -type f -name '*.c')
 OBJ_FILES = $(patsubst $(SRC_PATH)/%.c,$(OBJ_PATH)/%.o, $(SRC_FILES))
 
