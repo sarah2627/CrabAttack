@@ -69,22 +69,18 @@ TypeTower choixTower(int clickX, int clickY){
     //choix rocket
     if(clickX > 337 && clickX < 385 && clickY > 564 && clickY < 612){
         type = ROCKET;
-        printf("OK rocket\n");
     }
     //choix laser
     else if(clickX > 404 && clickX < 454 && clickY > 564 && clickY < 612){
         type = LASER;
-        printf("OK laser\n");
     }
     //choix mitraillette
     else if(clickX > 474 && clickX < 521 && clickY > 564 && clickY < 612){
         type = MITRAILLETTE;
-        printf("OK mitraillette\n");
     }
     //choix 
     else if(clickX > 541 && clickX < 589 && clickY > 564 && clickY < 612){
         type = HYBRIDE;
-        printf("OK hybride\n");
     }
     else{
         fprintf(stderr, "erreur lors du choix du type\n");
